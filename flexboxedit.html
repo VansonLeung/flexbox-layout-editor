@@ -101,8 +101,8 @@
     <button data-btn-editlayout>Edit Layout Mode</button>
     <button data-btn-editcontent>Edit Content Mode</button>
     <input type="checkbox" data-toggle-displaytaglabels checked /><label>Display tag labels</label>
-    <input type="checkbox" data-toggle-displaytagcontents checked /><label>Display tag contents</label>
     <button data-btn-edititeminnerhtml>Edit Item Inner HTML</button>
+    <button data-btn-preview>Preview Webpage</button>
 </div>
 
 <div class="controls" data-toolbar-edit-layout style="width: 100%; overflow-x: auto;">
@@ -110,6 +110,9 @@
     <button style="flex: 1; width: 200px;" id="addItem">Add Item into Selected Flexbox</button>
     <button style="flex: 1; width: 200px;" id="addItemBeforeSibling">Add Item before Selected Flexbox</button>
     <button style="flex: 1; width: 200px;" id="addItemAfterSibling">Add Item after Selected Flexbox</button>
+    <button style="flex: 1; width: 200px;" id="moveItemToInside">Move to inside...</button>
+    <button style="flex: 1; width: 200px;" id="moveItemToBefore">Move to before...</button>
+    <button style="flex: 1; width: 200px;" id="moveItemToAfter">Move to after...</button>
   </div>
   <button id="removeItem">Remove Selected Item</button>
   <label>
@@ -256,31 +259,33 @@
           <option value="sticky">sticky</option>
       </select>
   </label>
-  <label>
-      Text Align:
-      <select id="text-align" size="6">
-          <option value=""></option>
-          <option value="inherit">inherit</option>
-          <option value="initial">initial</option>
-          <option value="left">left</option>
-          <option value="right">right</option>
-          <option value="center">center</option>
-      </select>
-  </label>
-  <label>
-      Vertical Align:
-      <select id="vertical-align" size="9">
-          <option value=""></option>
-          <option value="inherit">inherit</option>
-          <option value="initial">initial</option>
-          <option value="baseline">baseline</option>
-          <option value="top">top</option>
-          <option value="middle">middle</option>
-          <option value="bottom">bottom</option>
-          <option value="sub">sub</option>
-          <option value="text-top">text-top</option>
-      </select>
-  </label>
+  <span style="display: flex; flex-direction: column;">
+    <label>
+        Text Align:
+        <select id="text-align" size="6">
+            <option value=""></option>
+            <option value="inherit">inherit</option>
+            <option value="initial">initial</option>
+            <option value="left">left</option>
+            <option value="right">right</option>
+            <option value="center">center</option>
+        </select>
+    </label>
+    <label>
+        Vertical Align:
+        <select id="vertical-align" size="9">
+            <option value=""></option>
+            <option value="inherit">inherit</option>
+            <option value="initial">initial</option>
+            <option value="baseline">baseline</option>
+            <option value="top">top</option>
+            <option value="middle">middle</option>
+            <option value="bottom">bottom</option>
+            <option value="sub">sub</option>
+            <option value="text-top">text-top</option>
+        </select>
+    </label>
+  </span>
   <span style="display: flex; flex-direction: column;">
     <label>
       Overflow-x:
@@ -350,16 +355,28 @@
 
 <div data-overlay-editor-holder style="display: none; flex-direction: column; position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; 
 align-items: stretch;
-background: rgba(0,0,0,0.5); padding: 20px; box-sizing: border-box;">
-  <div style="display: flex; flex-direction: row; padding: 20px; gap: 10px; box-sizing: border-box;">
+background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
+  <div style="display: flex; flex-direction: row; padding: 10px; gap: 10px; box-sizing: border-box;">
     <div style="flex: 1;"></div>
     <button data-btn-overlayeditorclose>Close</button>
   </div>
-  <div style="flex: 1; position:relative; background: #fff; padding: 20px;">
+  <div style="flex: 1; position:relative; background: #fff; padding: 10px;">
     <div data-overlay-editor></div>
   </div>
 </div>
 
+
+<div data-overlay-preview-holder style="display: none; flex-direction: column; position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; 
+align-items: stretch;
+background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
+  <div style="display: flex; flex-direction: row; padding: 10px; gap: 10px; box-sizing: border-box;">
+    <div style="flex: 1;"></div>
+    <button data-btn-overlaypreviewclose>Close</button>
+  </div>
+  <div style="flex: 1; position:relative; background: #fff; padding: 10px; display: flex; align-items: stretch;">
+    <div data-overlay-preview style="flex: 1; position:relative; display: flex; align-items: stretch;"></div>
+  </div>
+</div>
 
 
 <script>
@@ -398,18 +415,23 @@ background: rgba(0,0,0,0.5); padding: 20px; box-sizing: border-box;">
     const domBtnEditlayout = document.querySelector('[data-btn-editlayout]');
     const domBtnEditcontent = document.querySelector('[data-btn-editcontent]');
     const domBtnEdititeminnerhtml = document.querySelector('[data-btn-edititeminnerhtml]');
+    const domBtnPreview = document.querySelector('[data-btn-preview]');
 
     const domToolbarEditLayout = document.querySelector('[data-toolbar-edit-layout]');
     const domToolbarEditContent = document.querySelector('[data-toolbar-edit-content]');
 
     const domToggleDisplaytaglabels = document.querySelector('[data-toggle-displaytaglabels]');
-    const domToggleDisplaytagcontents = document.querySelector('[data-toggle-displaytagcontents]');
 
     const domBtnDbgCopy = document.querySelector('[data-btn-dbg-copy]');
     const domBtnDbgReload = document.querySelector('[data-btn-dbg-reload]');
+
     const domBtnOverlayEditorClose = document.querySelector('[data-btn-overlayeditorclose]');
     const domOverlayEditorHolder = document.querySelector('[data-overlay-editor-holder]');
     const domOverlayEditor = document.querySelector('[data-overlay-editor]');
+
+    const domBtnOverlayPreviewClose = document.querySelector('[data-btn-overlaypreviewclose]');
+    const domOverlayPreviewHolder = document.querySelector('[data-overlay-preview-holder]');
+    const domOverlayPreview = document.querySelector('[data-overlay-preview]');
 
 
 
@@ -440,6 +462,8 @@ background: rgba(0,0,0,0.5); padding: 20px; box-sizing: border-box;">
 
             __renderBox(selectedBox, null, null, undefined, undefined, true);
             __renderBox(selectedBox, null, null, undefined, undefined, false);
+
+            __refreshExports();
           }
         },
       },
@@ -449,7 +473,6 @@ background: rgba(0,0,0,0.5); padding: 20px; box-sizing: border-box;">
     var _isModeEditLayout = true;
     var _isModeEditContent = false;
     var _isToggleDisplayTagLabels = domToggleDisplaytaglabels.checked;
-    var _isToggleDisplayTagContents = domToggleDisplaytagcontents.checked;
 
     var domBoxMapping = new Map();
 
@@ -619,20 +642,20 @@ background: rgba(0,0,0,0.5); padding: 20px; box-sizing: border-box;">
 
     function renderBoxes() {
 
-      if (_isModeEditContent) {
-        domToolbarEditContent.style.display = "";
-        domToolbarEditLayout.style.display = "none";
-      } else {
-        domToolbarEditLayout.style.display = "";
-        domToolbarEditContent.style.display = "none";
-      }
-
-
-      domDbg.value = `${JSON.stringify(rootBox)}`;
+      domToolbarEditLayout.style.display = "";
+      domToolbarEditContent.style.display = "none";
 
       __renderBox(rootBox, null, domEditorArea, 0, 0, true);
       __renderBox(rootBox, null, domEditorAreaHidden, 0, 0, false);
 
+      __refreshExports();
+      __refreshSettings();
+    }
+
+
+    const __refreshExports = () => {
+
+      domDbg.value = `${JSON.stringify(rootBox)}`;
       domResult.value = `
 <style>
 .box {
@@ -648,7 +671,6 @@ width: 100%; height: 100%;">
       
       `;
 
-      __refreshSettings();
     }
 
 
@@ -687,12 +709,10 @@ width: 100%; height: 100%;">
       if (isContainIndicators) {
         if (_isModeEditContent) {
           domBox.setBackgroundColor('');
-          domBox.domContentEditable.classList.add('is-active')
         } else {
           if (level !== undefined) {
             domBox.setBackgroundColor(rainbowColorsHex[level % rainbowColorsHex.length]);
           }
-          domBox.domContentEditable.classList.remove('is-active')
         }
 
         domBox.setIsHighlighted(domBox.box === selectedBox);
@@ -704,6 +724,29 @@ width: 100%; height: 100%;">
           domBox.classList.remove('is-edit-layout');
         }
 
+        if (_isModeEditLayout) {
+          const innerHTML = (box.innerHTML || '').trim() || '';
+          if (innerHTML) {
+            if (domBox.shadowInnerHTML !== innerHTML) {
+              domBox.shadowInnerHTML = innerHTML;
+              domBox.innerHTML = innerHTML;
+              domBox.prepend(domBox.domContentLabel);
+            }
+          } else {
+            domBox.shadowInnerHTML = innerHTML;
+            domBox.innerHTML = innerHTML;
+            domBox.prepend(domBox.domContentLabel);
+          }
+        } else {
+          const innerHTML = (box.innerHTML || '').trim() || '';
+          if (domBox.shadowInnerHTML !== innerHTML) {
+            domBox.shadowInnerHTML = innerHTML;
+            domBox.innerHTML = innerHTML;
+            domBox.prepend(domBox.domContentLabel);
+          }
+        }
+
+
         if (!_isToggleDisplayTagLabels) {
           domBox.domContentLabel.style.display = `none`;
         } else {
@@ -713,42 +756,16 @@ width: 100%; height: 100%;">
           domBox.domContentLabel.style.display = ``;
         }
 
-        if (!_isToggleDisplayTagContents) {
-          domBox.domContentEditable.style.display = `none`;
-        } else {
-          domBox.domContentEditable.style.display = ``;
-        }
-
-
-
-        if (_isModeEditLayout) {
-          const innerHTML = (box.innerHTML || '').trim() || '';
-          if (innerHTML) {
-            if (domBox.domContentEditable.innerHTML !== innerHTML) {
-              domBox.domContentEditable.innerHTML = innerHTML;
-              domBox.domContentEditable.style.display = ``;
-            }
-          } else {
-            domBox.domContentEditable.innerHTML = '';
-            domBox.domContentEditable.style.display = `none`;
-          }
-        } else {
-          const innerHTML = (box.innerHTML || '').trim() || '';
-          if (domBox.domContentEditable.innerHTML !== innerHTML) {
-            domBox.domContentEditable.innerHTML = innerHTML;
-            domBox.domContentEditable.style.display = ``;
-          }
-        }
 
 
       } else {
         const innerHTML = (box.innerHTML || '').trim() || '';
         if (innerHTML) {
-          domBox.domContentEditable.innerHTML = innerHTML;
-          domBox.append(domBox.domContentEditable);
+          domBox.shadowInnerHTML = innerHTML;
+          domBox.innerHTML = innerHTML;
         } else {
-          domBox.domContentEditable.innerHTML = '';
-          domBox.domContentEditable.remove();
+          domBox.shadowInnerHTML = '';
+          domBox.innerHTML = '';
         }
       }
 
@@ -807,41 +824,7 @@ width: 100%; height: 100%;">
         const domContentLabel = document.createElement('div');
         domContentLabel.setAttribute('data-box-content-label', ``);
         domBox.append(domContentLabel);
-
-        const domContentEditable = document.createElement('span');
-        domContentEditable.setAttribute('data-box-content-editable', ``);
-        domContentEditable.setAttribute('contenteditable', true);
-        domBox.append(domContentEditable);
-
-        if (!domContentEditable.textContent.trim()) {
-          domContentEditable.classList.add('is-empty');
-        } else {
-          domContentEditable.classList.remove('is-empty');
-        }
-
-        domContentEditable.addEventListener('input', (e) => {
-          box.innerHTML = domContentEditable.innerHTML;
-
-          if (box.innerHTML.trim() === '<br>') {
-            box.innerHTML = "";
-          }
-
-          if (!domContentEditable.textContent.trim()) {
-            domContentEditable.classList.add('is-empty');
-          } else {
-            domContentEditable.classList.remove('is-empty');
-          }
-
-          renderBoxes();
-        })
-
         domBox.domContentLabel = domContentLabel;
-        domBox.domContentEditable = domContentEditable;
-
-      } else {
-        const domContentEditable = document.createElement('span');
-        domBox.append(domContentEditable);
-        domBox.domContentEditable = domContentEditable;
       }
 
       return domBox;
@@ -933,11 +916,6 @@ width: 100%; height: 100%;">
       renderBoxes();
     })
 
-    domToggleDisplaytagcontents.addEventListener('change', (e) => {
-      _isToggleDisplayTagContents = e.target.checked;
-      renderBoxes();
-    })
-
 
 
     domBtnDbgCopy.addEventListener('click', (e) => {
@@ -998,6 +976,52 @@ width: 100%; height: 100%;">
     domBtnOverlayEditorClose.addEventListener('click', (e) => {
       domOverlayEditorHolder.style.display = `none`;
     })
+
+
+    domBtnPreview.addEventListener('click', (e) => {
+      domOverlayPreviewHolder.style.display = `flex`;
+      const iframeElement = generateIframe(domResult.value);
+      domOverlayPreview.innerHTML = ``;
+      domOverlayPreview.appendChild(iframeElement);
+    })
+
+    domBtnOverlayPreviewClose.addEventListener('click', (e) => {
+      domOverlayPreview.innerHTML = ``;
+      domOverlayPreviewHolder.style.display = `none`;
+    })
+
+
+
+    function generateIframe(htmlContent) {
+      // Create a new iframe element
+      const iframe = document.createElement('iframe');
+      iframe.style.flex = 1;
+
+      // Set the HTML content of the iframe
+      iframe.srcdoc = `
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      html, body {
+        padding: 0;
+        margin: 0;
+      }
+      body {
+        width: calc(100vw);
+        height: calc(100vh);
+      }
+    </style>
+  </head>
+  <body>
+  ${htmlContent}
+  </body>
+</html>
+      `;
+
+      // Return the iframe element
+      return iframe;
+    }
 
     renderBoxes();
 
