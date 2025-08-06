@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WYSIWYG Flexbox Editor</title>
+
+    <link href="./flexboxedit.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+</head>
+<body>
+
+<div domEditorArea id="editor">
+</div>
+<div domEditorAreaHidden style="display: none;">
+</div>
+
+<div class="controls">
+    <button data-btn-editlayout>Edit Layout Mode</button>
+    <button data-btn-editcontent>Edit Content Mode</button>
+    <input type="checkbox" data-toggle-displaytaglabels checked /><label>Display tag labels</label>
+    <button data-btn-edititeminnerhtml>Edit Item Inner HTML</button>
+    <button data-btn-preview>Preview Webpage</button>
+</div>
+
+<div class="controls" data-toolbar-edit-layout style="width: 100%; overflow-x: auto;">
+  <div style="display: flex; flex-direction: column;">
+    <button style="flex: 1; width: 200px;" id="addItem">Add Item into Selected Flexbox</button>
+    <button disabled style="flex: 1; width: 200px;" id="addItemBeforeSibling">(WIP) Add Item before Selected Flexbox</button>
+    <button disabled style="flex: 1; width: 200px;" id="addItemAfterSibling">(WIP) Add Item after Selected Flexbox</button>
+    <button disabled style="flex: 1; width: 200px;" id="moveItemToInside">(WIP) Move to inside...</button>
+    <button disabled style="flex: 1; width: 200px;" id="moveItemToBefore">(WIP) Move to before...</button>
+    <button disabled style="flex: 1; width: 200px;" id="moveItemToAfter">(WIP) Move to after...</button>
+  </div>
+  <button id="removeItem">Remove Selected Item</button>
+  <label>
+      Display:
+      <select id="display" size="11">
+          <option value=""></option>
+          <option value="initial">initial</option>
+          <option value="inherit">inherit</option>
+          <option value="flex">flex</option>
+          <option value="block">block</option>
+          <option value="inline">inline</option>
+          <option value="inline-block">inline-block</option>
+          <option value="inline-flex">inline-flex</option>
+          <option value="grid">grid</option>
+          <option value="inline-grid">inline-grid</option>
+          <option value="flow-root">flow-root</option>
+      </select>
+  </label>
+  <span style="display: flex; flex-direction: column;">
+    <label>
+        Flex Direction:
+        <select id="flexDirection" size="7">
+            <option value=""></option>
+            <option value="initial">initial</option>
+            <option value="inherit">inherit</option>
+            <option value="row">Row</option>
+            <option value="row-reverse">Row Reverse</option>
+            <option value="column">Column</option>
+            <option value="column-reverse">Column Reverse</option>
+        </select>
+    </label>
+    <label>
+        Justify Content:
+        <select id="justifyContent" size="9">
+            <option value=""></option>
+            <option value="initial">initial</option>
+            <option value="inherit">inherit</option>
+            <option value="flex-start">Start</option>
+            <option value="flex-end">End</option>
+            <option value="center">Center</option>
+            <option value="stretch">Stretch</option>
+            <option value="space-between">Space Between</option>
+            <option value="space-around">Space Around</option>
+        </select>
+    </label>
+  </span>
+  <span style="display: flex; flex-direction: column;">
+    <label>
+        Align Items:
+        <select id="alignItems" size="7">
+            <option value=""></option>
+            <option value="initial">initial</option>
+            <option value="inherit">inherit</option>
+            <option value="stretch">Stretch</option>
+            <option value="flex-start">Start</option>
+            <option value="flex-end">End</option>
+            <option value="center">Center</option>
+        </select>
+    </label>
+    <label>
+        Align Self:
+        <select id="alignSelf" size="7">
+            <option value=""></option>
+            <option value="initial">initial</option>
+            <option value="inherit">inherit</option>
+            <option value="stretch">Stretch</option>
+            <option value="flex-start">Start</option>
+            <option value="flex-end">End</option>
+            <option value="center">Center</option>
+        </select>
+    </label>
+  </span>
+  <span style="display: flex; flex-direction: column;">
+    <label>
+        Flex:
+        <input type="text" id="flex" />
+    </label>
+    <label>
+        Gap:
+        <input type="text" id="gap" />
+    </label>
+    <label>
+        Padding:
+        <input type="text" id="padding" />
+    </label>
+    <label>
+        Margin:
+        <input type="text" id="margin" />
+    </label>
+
+
+    <label>
+        Justify Self:
+        <select id="justifySelf" size="9">
+            <option value=""></option>
+            <option value="initial">initial</option>
+            <option value="inherit">inherit</option>
+            <option value="flex-start">Start</option>
+            <option value="flex-end">End</option>
+            <option value="center">Center</option>
+            <option value="stretch">Stretch</option>
+            <option value="space-between">Space Between</option>
+            <option value="space-around">Space Around</option>
+        </select>
+    </label>
+
+  </span>
+  <span style="display: flex; flex-direction: column;">
+    <label>
+        Width:
+        <input type="text" id="width" />
+    </label>
+    <label>
+        Height:
+        <input type="text" id="height" />
+    </label>
+    <label>
+        Min Width:
+        <input type="text" id="minWidth" />
+    </label>
+    <label>
+        Min Height:
+        <input type="text" id="minHeight" />
+    </label>
+    <label>
+        Max Width:
+        <input type="text" id="maxWidth" />
+    </label>
+    <label>
+        Max Height:
+        <input type="text" id="maxHeight" />
+    </label>
+  </span>
+  <label>
+      Position:
+      <select id="position" size="8">
+          <option value=""></option>
+          <option value="inherit">inherit</option>
+          <option value="initial">initial</option>
+          <option value="static">static</option>
+          <option value="relative">relative</option>
+          <option value="absolute">absolute</option>
+          <option value="fixed">fixed</option>
+          <option value="sticky">sticky</option>
+      </select>
+  </label>
+  <span style="display: flex; flex-direction: column;">
+    <label>
+        Text Align:
+        <select id="text-align" size="6">
+            <option value=""></option>
+            <option value="inherit">inherit</option>
+            <option value="initial">initial</option>
+            <option value="left">left</option>
+            <option value="right">right</option>
+            <option value="center">center</option>
+        </select>
+    </label>
+    <label>
+        Vertical Align:
+        <select id="vertical-align" size="9">
+            <option value=""></option>
+            <option value="inherit">inherit</option>
+            <option value="initial">initial</option>
+            <option value="baseline">baseline</option>
+            <option value="top">top</option>
+            <option value="middle">middle</option>
+            <option value="bottom">bottom</option>
+            <option value="sub">sub</option>
+            <option value="text-top">text-top</option>
+        </select>
+    </label>
+  </span>
+  <span style="display: flex; flex-direction: column;">
+    <label>
+      Overflow-x:
+      <select id="overflow-x" size="7">
+          <option value=""></option>
+          <option value="inherit">inherit</option>
+          <option value="initial">initial</option>
+          <option value="auto">auto</option>
+          <option value="scroll">scroll</option>
+          <option value="hidden">hidden</option>
+          <option value="visible">visible</option>
+      </select>
+    </label>
+    <label>
+      Overflow-y:
+      <select id="overflow-y" size="7">
+          <option value=""></option>
+          <option value="inherit">inherit</option>
+          <option value="initial">initial</option>
+          <option value="auto">auto</option>
+          <option value="scroll">scroll</option>
+          <option value="hidden">hidden</option>
+          <option value="visible">visible</option>
+      </select>
+    </label>
+  </span>
+  <span style="display: flex; flex-direction: column;">
+    <label>
+        Left:
+        <input type="text" id="left" />
+    </label>
+    <label>
+        Top:
+        <input type="text" id="top" />
+    </label>
+    <label>
+        Right:
+        <input type="text" id="right" />
+    </label>
+    <label>
+        Bottom:
+        <input type="text" id="bottom" />
+    </label>
+  </span>
+
+  <div style="display: flex; ">
+    <div style="display: flex; flex-direction: column; ">
+      <div style="display: flex; flex-direction: row; ">
+        <label>Source JSON</label>
+        <label><button data-btn-dbg-copy>Copy JSON</label>
+        <label><button data-btn-dbg-reload>Reload from JSON</label>
+      </div>
+      <textarea data-dbg style="width: 250px; flex: 1; "></textarea>
+    </div>
+    <div style="display: flex; flex-direction: column; ">
+      <label>Export HTML</label>
+      <textarea data-result style="width: 250px; flex: 1; "></textarea>
+    </div>
+  </div>
+
+</div>
+
+<div class="controls" data-toolbar-edit-content>
+</div>
+
+
+
+<div data-overlay-editor-holder style="display: none; flex-direction: column; position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; 
+align-items: stretch;
+background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
+  <div style="display: flex; flex-direction: row; padding: 10px; gap: 10px; box-sizing: border-box;">
+    <div style="flex: 1;"></div>
+    <button data-btn-overlayeditorclose>Close</button>
+  </div>
+  <div style="flex: 1; position:relative; background: #fff; padding: 10px;">
+    <div data-overlay-editor></div>
+  </div>
+</div>
+
+
+<div data-overlay-preview-holder style="display: none; flex-direction: column; position: fixed; left: 0; top: 0; width: 100vw; height: 100vh; 
+align-items: stretch;
+background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
+  <div style="display: flex; flex-direction: row; padding: 10px; gap: 10px; box-sizing: border-box;">
+    <div style="flex: 1;"></div>
+    <button data-btn-overlaypreviewclose>Close</button>
+  </div>
+  <div style="flex: 1; position:relative; background: #fff; padding: 10px; display: flex; align-items: stretch;">
+    <div data-overlay-preview style="flex: 1; position:relative; display: flex; align-items: stretch;"></div>
+  </div>
+</div>
+
+
+<script src="./flexboxedit.js"></script>
+
+
+</body>
+</html>

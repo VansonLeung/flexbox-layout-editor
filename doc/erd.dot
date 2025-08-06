@@ -1,0 +1,438 @@
+digraph models_diagram {
+	graph [bb="0,0,3209.5,2205.8",
+		nodesep=.5,
+		overlap=false,
+		pad=0.5,
+		rankdir=TB,
+		ranksep=1
+	];
+	node [fontsize=10,
+		label="\N"
+	];
+	edge [color=black,
+		concentrate=true,
+		penwidth=0.75
+	];
+	Lang	 [height=4.2778,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>Lang</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">code: STRING</td></tr>
+<tr><td port="5" align="left">createdAt: DATE</td></tr>
+<tr><td port="6" align="left">updatedAt: DATE</td></tr>
+<tr><td port="7" align="left">createdBy: UUID</td></tr>
+<tr><td port="8" align="left">updatedBy: UUID</td></tr>
+<tr><td port="9" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="10" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="11" align="left">deletedAt: DATE</td></tr>
+<tr><td port="12" align="left">deletedBy: UUID</td></tr>
+  </table>>,
+		margin=0,
+		pos="52.5,1033.2",
+		shape=none,
+		width=1.4583];
+	UserPermission	 [height=4.2778,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserPermission</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">code: STRING</td></tr>
+  </table>>,
+		margin=0,
+		pos="3157,2051.8",
+		shape=none,
+		width=1.4583];
+	UserRolePermissionMapping	 [height=3.9722,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserRolePermissionMapping</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">permissionId: UUID</td></tr>
+<tr><td port="9" align="left">roleId: UUID</td></tr>
+<tr><td port="10" align="left">userPermissionId: UUID</td></tr>
+<tr><td port="11" align="left">userRoleId: UUID</td></tr>
+  </table>>,
+		margin=0,
+		pos="2972.1,1732.5",
+		shape=none,
+		width=1.7778];
+	UserPermission -> UserRolePermissionMapping	 [arrowhead=crow,
+		arrowsize=0.6,
+		arrowtail=none,
+		dir=both,
+		pos="e,3036.3,1843.3 3104.3,1960.8 3084.1,1925.9 3060.8,1885.6 3039.4,1848.7"];
+	UserRole	 [height=4.2778,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserRole</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">code: STRING</td></tr>
+  </table>>,
+		margin=0,
+		pos="2856.4,1419.7",
+		shape=none,
+		width=1.4583];
+	UserRole -> UserRolePermissionMapping	 [arrowhead=crow,
+		arrowsize=0.6,
+		arrowtail=none,
+		dir=both,
+		pos="e,2919.1,1589.1 2909,1561.9 2911.6,1569 2914.3,1576.1 2916.9,1583.1"];
+	User	 [height=4.8889,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>User</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">userRoleId: UUID</td></tr>
+<tr><td port="13" align="left">username: STRING</td></tr>
+<tr><td port="14" align="left">email: STRING</td></tr>
+  </table>>,
+		margin=0,
+		pos="2366.3,1103",
+		shape=none,
+		width=1.4583];
+	User -> UserRole	 [arrowhead=none,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,2419.2,1137.2 2424.3,1140.5 2520.4,1202.6 2711.2,1325.9 2803.7,1385.7"];
+	UserTemplateMapping	 [height=4.5833,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserTemplateMapping</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">templateId: UUID</td></tr>
+<tr><td port="13" align="left">userId: UUID</td></tr>
+  </table>>,
+		margin=0,
+		pos="999.5,1033.2",
+		shape=none,
+		width=1.4583];
+	User -> UserTemplateMapping	 [arrowhead=crow,
+		arrowsize=0.6,
+		arrowtail=none,
+		dir=both,
+		pos="e,1052.1,1035.9 2313.5,1100.3 2098,1089.3 1284.7,1047.8 1058.3,1036.2"];
+	UserCredential	 [height=4.8889,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserCredential</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">userId: UUID</td></tr>
+<tr><td port="13" align="left">type: ENUM</td></tr>
+<tr><td port="14" align="left">password: STRING</td></tr>
+  </table>>,
+		margin=0,
+		pos="2970.3,1068.7",
+		shape=none,
+		width=1.4583];
+	UserCredential -> User	 [arrowhead=none,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,2917.7,1071.7 2911.6,1072.1 2794.1,1078.7 2531.6,1093.6 2419.1,1100"];
+	UserSession	 [height=5.1944,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserSession</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">userId: UUID</td></tr>
+<tr><td port="13" align="left">userCredentialId: UUID</td></tr>
+<tr><td port="14" align="left">accessToken: STRING</td></tr>
+<tr><td port="15" align="left">refreshToken: STRING</td></tr>
+  </table>>,
+		margin=0,
+		pos="2607.5,824.04",
+		shape=none,
+		width=1.4722];
+	UserSession -> User	 [arrowhead=none,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,2554.3,885.61 2550.2,890.3 2510.4,936.35 2457.8,997.26 2419,1042.1"];
+	UserSession -> UserCredential	 [arrowhead=none,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,2660.7,859.89 2666,863.49 2735.6,910.42 2850.7,988.06 2917.6,1033.2"];
+	UserContact	 [height=6.7222,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserContact</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">userId: UUID</td></tr>
+<tr><td port="13" align="left">firstName: STRING</td></tr>
+<tr><td port="14" align="left">lastName: STRING</td></tr>
+<tr><td port="15" align="left">email: STRING</td></tr>
+<tr><td port="16" align="left">phone: STRING</td></tr>
+<tr><td port="17" align="left">address: STRING</td></tr>
+<tr><td port="18" align="left">city: STRING</td></tr>
+<tr><td port="19" align="left">state: STRING</td></tr>
+<tr><td port="20" align="left">zip: STRING</td></tr>
+  </table>>,
+		margin=0,
+		pos="2172.1,1737.8",
+		shape=none,
+		width=1.4583];
+	UserContact -> User	 [arrowhead=none,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,2224.6,1566 2226.4,1560.2 2253.8,1470.9 2286.7,1363.1 2313.8,1274.7"];
+	UserShipping	 [height=7.0278,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserShipping</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">userId: UUID</td></tr>
+<tr><td port="13" align="left">isDefault: BOOLEAN</td></tr>
+<tr><td port="14" align="left">firstName: STRING</td></tr>
+<tr><td port="15" align="left">lastName: STRING</td></tr>
+<tr><td port="16" align="left">email: STRING</td></tr>
+<tr><td port="17" align="left">phone: STRING</td></tr>
+<tr><td port="18" align="left">address: STRING</td></tr>
+<tr><td port="19" align="left">city: STRING</td></tr>
+<tr><td port="20" align="left">state: STRING</td></tr>
+<tr><td port="21" align="left">zip: STRING</td></tr>
+  </table>>,
+		margin=0,
+		pos="1810.6,1316.1",
+		shape=none,
+		width=1.4583];
+	UserShipping -> User	 [arrowhead=none,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,1863.2,1295.9 1868.9,1293.7 1977.4,1252.1 2209,1163.3 2313.4,1123.3"];
+	UserBilling	 [height=7.0278,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserBilling</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">userId: UUID</td></tr>
+<tr><td port="13" align="left">isDefault: BOOLEAN</td></tr>
+<tr><td port="14" align="left">firstName: STRING</td></tr>
+<tr><td port="15" align="left">lastName: STRING</td></tr>
+<tr><td port="16" align="left">email: STRING</td></tr>
+<tr><td port="17" align="left">phone: STRING</td></tr>
+<tr><td port="18" align="left">address: STRING</td></tr>
+<tr><td port="19" align="left">city: STRING</td></tr>
+<tr><td port="20" align="left">state: STRING</td></tr>
+<tr><td port="21" align="left">zip: STRING</td></tr>
+  </table>>,
+		margin=0,
+		pos="1810.6,750.31",
+		shape=none,
+		width=1.4583];
+	UserBilling -> User	 [arrowhead=none,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,1863.2,783.65 1868.5,787.07 1976.9,855.88 2208.9,1003.2 2313.4,1069.5"];
+	UserPayment	 [height=7.0278,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserPayment</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">userId: UUID</td></tr>
+<tr><td port="13" align="left">isDefault: BOOLEAN</td></tr>
+<tr><td port="14" align="left">desc: TEXT</td></tr>
+<tr><td port="15" align="left">json: JSON</td></tr>
+<tr><td port="16" align="left">baseId: UUID</td></tr>
+<tr><td port="17" align="left">langId: UUID</td></tr>
+<tr><td port="18" align="left">isPublished: BOOLEAN</td></tr>
+<tr><td port="19" align="left">publishedAt: DATE</td></tr>
+<tr><td port="20" align="left">publishedBy: UUID</td></tr>
+<tr><td port="21" align="left">revision: NUMBER</td></tr>
+  </table>>,
+		margin=0,
+		pos="2181.7,323.26",
+		shape=none,
+		width=1.5139];
+	UserPayment -> User	 [arrowhead=none,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,2236.3,553.79 2237.7,559.75 2265.7,677.9 2298.9,818.4 2324.6,926.92"];
+	UserStatus	 [height=6.7222,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>UserStatus</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">userId: UUID</td></tr>
+<tr><td port="13" align="left">desc: TEXT</td></tr>
+<tr><td port="14" align="left">json: JSON</td></tr>
+<tr><td port="15" align="left">baseId: UUID</td></tr>
+<tr><td port="16" align="left">langId: UUID</td></tr>
+<tr><td port="17" align="left">isPublished: BOOLEAN</td></tr>
+<tr><td port="18" align="left">publishedAt: DATE</td></tr>
+<tr><td port="19" align="left">publishedBy: UUID</td></tr>
+<tr><td port="20" align="left">revision: NUMBER</td></tr>
+  </table>>,
+		margin=0,
+		pos="2731.2,242",
+		shape=none,
+		width=1.5139];
+	UserStatus -> User	 [arrowhead=none,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,2676.6,370.91 2674.1,376.73 2604.2,541.69 2486.7,818.83 2418.9,978.84"];
+	Template	 [height=6.7222,
+		label=<<table border="0" cellborder="1" cellspacing="0" cellpadding="4">
+    <tr><td bgcolor="lightblue"><b>Template</b></td></tr>
+    <tr><td port="0" align="left"><u>id</u>: UUID</td></tr>
+<tr><td port="1" align="left">seqId: NUMBER</td></tr>
+<tr><td port="2" align="left">seq: NUMBER</td></tr>
+<tr><td port="3" align="left">name: STRING</td></tr>
+<tr><td port="4" align="left">createdAt: DATE</td></tr>
+<tr><td port="5" align="left">updatedAt: DATE</td></tr>
+<tr><td port="6" align="left">createdBy: UUID</td></tr>
+<tr><td port="7" align="left">updatedBy: UUID</td></tr>
+<tr><td port="8" align="left">isDeleted: BOOLEAN</td></tr>
+<tr><td port="9" align="left">isDisabled: BOOLEAN</td></tr>
+<tr><td port="10" align="left">deletedAt: DATE</td></tr>
+<tr><td port="11" align="left">deletedBy: UUID</td></tr>
+<tr><td port="12" align="left">desc: TEXT</td></tr>
+<tr><td port="13" align="left">json: JSON</td></tr>
+<tr><td port="14" align="left">baseId: UUID</td></tr>
+<tr><td port="15" align="left">langId: UUID</td></tr>
+<tr><td port="16" align="left">isPublished: BOOLEAN</td></tr>
+<tr><td port="17" align="left">publishedAt: DATE</td></tr>
+<tr><td port="18" align="left">publishedBy: UUID</td></tr>
+<tr><td port="19" align="left">revision: NUMBER</td></tr>
+<tr><td port="20" align="left">parentId: UUID</td></tr>
+  </table>>,
+		margin=0,
+		pos="520.5,1033.2",
+		shape=none,
+		width=1.5139];
+	Template -> Lang	 [arrowhead=none,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,465.9,1033.2 459.66,1033.2 367.18,1033.2 192.78,1033.2 105.32,1033.2"];
+	Template -> UserTemplateMapping	 [arrowhead=crow,
+		arrowsize=0.6,
+		arrowtail=crow,
+		dir=both,
+		pos="s,575.45,1033.2 e,946.65,1033.2 581.56,1033.2 674.19,1033.2 849.09,1033.2 940.49,1033.2"];
+}
