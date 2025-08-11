@@ -270,7 +270,6 @@ window.FlexboxEdit = (() => {
     }
 
     box.addBeforeBoxAsSibling = (sibling) => {
-      box.removeFromParent();
       const siblingIndex = sibling.getIndexAsChild();
       const siblingParent = sibling.getParent();
       if (!siblingParent) return;
@@ -279,7 +278,6 @@ window.FlexboxEdit = (() => {
     }
 
     box.addAfterBoxAsSibling = (sibling) => {
-      box.removeFromParent();
       const siblingIndex = sibling.getIndexAsChild();
       const siblingParent = sibling.getParent();
       if (!siblingParent) return;
@@ -392,6 +390,7 @@ window.FlexboxEdit = (() => {
       __fulfillBoxMethods(box);
       for (var k in (box.children || [])) {
         fulfillBox(box.children[k]);
+        box.children[k].getParent = () => box;
       }
     }
 
