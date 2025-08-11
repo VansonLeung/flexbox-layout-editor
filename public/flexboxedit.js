@@ -1,4 +1,44 @@
-(() => {
+window.FlexboxEdit = (() => {
+
+  let onUpdateItem = null;
+  let onUpdateItemMeta = null;
+
+  const setOnUpdateItem = (callback) => {
+    onUpdateItem = (isUpdate) => {
+      callback({
+        isUpdate,
+        id: domInputItemmetaId.value,
+        name: domInputItemmetaName.value,
+        json: domDbg.value,
+      });
+    }
+  }
+
+  const setOnUpdateItemMeta = (callback) => {
+    onUpdateItemMeta = (isUpdate) => {
+      callback({
+        isUpdate,
+        id: domInputItemmetaId.value,
+        name: domInputItemmetaName.value,
+        json: domDbg.value,
+      });
+    }
+  }
+
+  const loadItem = (item) => {
+    domInputItemmetaId.value = item.id || '';
+    domInputItemmetaName.value = item.name || '';
+    domDbg.value = item.json ? JSON.stringify(item.json) : '';
+    doDbgReload();
+  }
+
+  const createNewItem = () => {
+    domInputItemmetaId.value = '';
+    domInputItemmetaName.value = '';
+    domDbg.value = '';
+    doDbgReload();
+  }
+
   const domDbg = document.querySelector('[data-dbg]');
   const domResult = document.querySelector('[data-result]');
   const domEditorArea = document.querySelector('[domEditorArea]');
@@ -35,6 +75,16 @@
   const domBtnEdititeminnerhtml = document.querySelector('[data-btn-edititeminnerhtml]');
   const domBtnPreview = document.querySelector('[data-btn-preview]');
 
+  const domHolderExplorer = document.querySelector('[data-holder-explorer]');
+  const domHolderMain = document.querySelector('[data-holder-main]');
+
+  const domExplorerItemlist = document.querySelector('[data-explorer-itemlist]');
+
+  const domInputItemmetaName = document.querySelector('[data-input-itemmeta-name]');
+  const domInputItemmetaId = document.querySelector('[data-input-itemmeta-id]');
+
+  const domToolbarItemmeta = document.querySelector('[data-toolbar-itemmeta]');
+  const domToolbarMenu = document.querySelector('[data-toolbar-menu]');
   const domToolbarEditLayout = document.querySelector('[data-toolbar-edit-layout]');
   const domToolbarEditContent = document.querySelector('[data-toolbar-edit-content]');
 
@@ -50,6 +100,15 @@
   const domBtnOverlayPreviewClose = document.querySelector('[data-btn-overlaypreviewclose]');
   const domOverlayPreviewHolder = document.querySelector('[data-overlay-preview-holder]');
   const domOverlayPreview = document.querySelector('[data-overlay-preview]');
+
+
+  domHolderExplorer.append(domExplorerItemlist);
+
+  domHolderMain.append(domEditorArea);
+  domHolderMain.append(domEditorAreaHidden);
+  domHolderMain.append(domToolbarItemmeta);
+  domHolderMain.append(domToolbarMenu);
+  domHolderMain.append(domToolbarEditLayout);
 
 
 
@@ -306,7 +365,11 @@
 
 
 
-  function renderBoxes() {
+  function renderBoxes({
+    isUpdate = false,
+  } = {
+    isUpdate: false,
+  }) {
 
     domToolbarEditLayout.style.display = "";
     domToolbarEditContent.style.display = "none";
@@ -316,6 +379,39 @@
 
     __refreshExports();
     __refreshSettings();
+
+    onUpdateItem && onUpdateItem(isUpdate);
+  }
+
+
+  const doDbgReload = () => {
+
+    const newRootBox = domDbg.value ? JSON.parse(domDbg.value) : __createBox({name: 'Root'});
+
+    const fulfillBox = (box) => {
+      __fulfillBoxMethods(box);
+      for (var k in (box.children || [])) {
+        fulfillBox(box.children[k]);
+      }
+    }
+
+    for (var k in rootBox) {
+      delete rootBox[k];
+    }
+
+    for (var k in newRootBox) {
+      rootBox[k] = newRootBox[k];
+    }
+
+    fulfillBox(rootBox);
+
+    domEditorArea.innerHTML = '';
+    domEditorAreaHidden.innerHTML = '';
+    domBoxMapping.clear();
+
+    setTimeout(() => {
+      renderBoxes();
+    }, 100);
   }
 
 
@@ -544,7 +640,9 @@
     } else {
       box.addToParent(selectedBox);
     }
-    renderBoxes();
+    renderBoxes({
+      isUpdate: true,
+    });
   }
 
   function removeItem() {
@@ -559,7 +657,9 @@
     }
 
     selectedBox = siblingOrParentBox;
-    renderBoxes();
+    renderBoxes({
+      isUpdate: true,
+    });
   }
 
   function moveItem({
@@ -596,7 +696,9 @@
       ];
       removeItem();
     }
-    renderBoxes();
+    renderBoxes({
+      isUpdate: true,
+    });
   }
 
 
@@ -617,7 +719,9 @@
               delete selectedBox.style[key];
             }
         }
-        renderBoxes();
+        renderBoxes({
+          isUpdate: true,
+        });
       });
     } else {
       input.addEventListener('input', (e) => {
@@ -629,7 +733,9 @@
               delete selectedBox.style[key];
             }
         }
-        renderBoxes();
+        renderBoxes({
+          isUpdate: true,
+        });
       });
     }
   }
@@ -676,32 +782,7 @@
 
 
   domBtnDbgReload.addEventListener('click', (e) => {
-    const newRootBox = JSON.parse(domDbg.value);
-
-    const fulfillBox = (box) => {
-      __fulfillBoxMethods(box);
-      for (var k in (box.children || [])) {
-        fulfillBox(box.children[k]);
-      }
-    }
-
-    for (var k in rootBox) {
-      delete rootBox[k];
-    }
-
-    for (var k in newRootBox) {
-      rootBox[k] = newRootBox[k];
-    }
-
-    fulfillBox(rootBox);
-
-    domEditorArea.innerHTML = '';
-    domEditorAreaHidden.innerHTML = '';
-    domBoxMapping.clear();
-
-    setTimeout(() => {
-      renderBoxes();
-    }, 100);
+    doDbgReload();
   })
 
 
@@ -726,6 +807,19 @@
     domOverlayPreview.innerHTML = ``;
     domOverlayPreviewHolder.style.display = `none`;
   })
+
+
+
+  document.querySelector('[data-btn-loadsave-new]').addEventListener('click', () => {
+    createNewItem();
+  });
+
+
+
+  domInputItemmetaName.addEventListener('input', (e) => {
+    onUpdateItemMeta && onUpdateItemMeta({isUpdate: true, });
+  })
+
 
 
 
@@ -760,7 +854,21 @@
     return iframe;
   }
 
-  renderBoxes();
+  
+
+  createNewItem();
+
+
+
+
+
+
+  return {
+    setOnUpdateItem,
+    setOnUpdateItemMeta,
+    loadItem,
+    domExplorerItemlist,
+  }
 
 
 })();

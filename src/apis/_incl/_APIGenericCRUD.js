@@ -177,7 +177,7 @@ export const _APIGenericCRUD = {
                     where: { id: req.params.id }
                 });
                 if (deleted) {
-                    res.sendResponse({status: 204});
+                    res.sendResponse({status: 201});
                 } else {
                     res.sendError({status: 404, error: new Error(`${collectionName} not found`), });
                 }

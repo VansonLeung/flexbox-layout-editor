@@ -12,12 +12,34 @@
 </head>
 <body>
 
+<div style="display: flex; flex-direction: row;flex: 1; height: 100%; width: 100%;">
+  <div data-holder-explorer style="display: flex; flex-direction: column; ">
+  </div>
+
+  <div data-holder-main style="display: flex; flex-direction: column; flex: 1; width: 0;">
+  </div>
+</div>
+
 <div domEditorArea id="editor">
 </div>
 <div domEditorAreaHidden style="display: none;">
 </div>
 
-<div class="controls">
+
+<div class="explorer" data-explorer-itemlist style="display: flex; flex-direction: column; overflow-y: auto; height: 100%; width: 250px; ">
+  <div class="explorer-item">asd</div>
+</div>
+
+
+<div class="controls" data-toolbar-itemmeta>
+  <label>Name</label>
+  <input type="text" data-input-itemmeta-name autocapitalize="false" autocorrect="false" autocomplete="false" style="width: 250px;" />
+  <label>ID</label>
+  <input type="text" data-input-itemmeta-id autocapitalize="false" autocorrect="false" autocomplete="false" readonly style="width: 250px;" />
+</div>
+
+<div class="controls" data-toolbar-menu>
+    <button data-btn-loadsave-new>New</button>
     <button data-btn-editlayout>Edit Layout Mode</button>
     <button data-btn-editcontent>Edit Content Mode</button>
     <input type="checkbox" data-toggle-displaytaglabels checked /><label>Display tag labels</label>
@@ -35,7 +57,7 @@
       <button disabled style="flex: 1;" id="moveItemCopy">(WIP) Copy</button>
       <button style="flex: 1;" id="moveItemPaste">Paste</button>
     </div>
-    <button style="flex: 1; width: 200px;" id="moveItemToBefore">Shift Uup...</button>
+    <button style="flex: 1; width: 200px;" id="moveItemToBefore">Shift Up...</button>
     <button style="flex: 1; width: 200px;" id="moveItemToAfter">Shift down...</button>
   </div>
   <button id="removeItem">Remove Selected Item</button>
@@ -259,8 +281,12 @@
     <div style="display: flex; flex-direction: column; ">
       <div style="display: flex; flex-direction: row; ">
         <label>Source JSON</label>
-        <label><button data-btn-dbg-copy>Copy JSON</label>
-        <label><button data-btn-dbg-reload>Reload from JSON</label>
+        <div style="display: flex; flex-direction: column; justify-content: stretch;">
+          <div style="display: flex; flex-direction: row; flex: 1; align-items: stretch;">
+            <button data-btn-dbg-copy>Copy JSON</button>
+            <button data-btn-dbg-reload>Reload from JSON</button>
+          </div>
+        </div>
       </div>
       <textarea data-dbg style="width: 250px; flex: 1; "></textarea>
     </div>
@@ -304,6 +330,131 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
 
 
 <script src="./flexboxedit.js"></script>
+<script src="./flexboxedit.loadsave.js"></script>
+
+
+<script>
+  (async () => {
+
+    const doSave = async ({
+      id,
+      name,
+      json,
+    }) => {
+      const res = await FlexboxEdit.LoadSave.applySave(id, {
+        name,
+        json,
+      });
+
+      if (!id) {
+        await doLoadList();
+
+        await FlexboxEdit.loadItem({
+          id: res.data.id,
+          name: res.data.name,
+          json: JSON.parse(res.data.json),
+        });
+      }
+
+      if (res.data) {
+        FlexboxEdit.domExplorerItemlist.querySelectorAll(`[data-explorer-item-id="${res.data.id}"]`).forEach((dom) => {
+          dom.item = res.data;
+          dom.domName.innerHTML = res.data.name?.trim() || `Untitled`;
+        });
+      }
+    }
+
+
+    const doLoadList = async () => {
+
+      const reslist = await FlexboxEdit.LoadSave.applyLoadList();
+
+      FlexboxEdit.domExplorerItemlist.innerHTML = "";
+
+      for (var k in reslist.data) {
+        const item = reslist.data[k];
+
+        const domContainer = document.createElement('div');
+
+        domContainer.innerHTML = `
+<div class="explorer-item" data-explorer-item data-explorer-item-id="${item.id}">
+  <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+    <div data-explorer-item-name style="flex: 1;">
+      ${item.name?.trim() || `<span style="font-style: italic; color: rgb(100,100,100);">Untitled</span>`}
+    </div>
+    <div data-explorer-item-remove>
+      [x]
+    </div>
+  </div>
+</div>
+`;
+
+        const dom = domContainer.children[0];
+        dom.domName = dom.querySelector('[data-explorer-item-name]');
+        dom.item = item;
+
+        FlexboxEdit.domExplorerItemlist.append(dom);
+      }
+
+    }
+
+
+    const removeItem = async () => {
+
+      await FlexboxEdit.LoadSave.applyRemove();
+
+      FlexboxEdit.domExplorerItemlist.querySelectorAll(`[data-explorer-item-id="${res.data.id}"]`).forEach((dom) => {
+        dom.remove();
+      });
+
+    }
+
+
+
+    FlexboxEdit.setOnUpdateItem( async ({ isUpdate, id, name, json, }) => {
+      if (isUpdate) {
+        await doSave({id, name, json, });
+      }
+    });
+
+
+
+    FlexboxEdit.setOnUpdateItemMeta( async ({ isUpdate, id, name, json, }) => {
+      if (isUpdate) {
+        await doSave({id, name, json, });
+      }
+    });
+
+
+
+    FlexboxEdit.domExplorerItemlist.addEventListener('click', async (e) => {
+      e.preventDefault();
+
+      const domItemRemove = e.target.closest(`[data-explorer-item-remove]`);
+      const domItem = e.target.closest(`[data-explorer-item]`);
+
+      if (domItemRemove) {
+
+        const res = await FlexboxEdit.LoadSave.applyRemove(domItem.item.id);
+        domItem.remove();
+
+      } else if (domItem) {
+
+        const res = await FlexboxEdit.LoadSave.applyLoad(domItem.item.id);
+        await FlexboxEdit.loadItem({
+          id: res.data.id,
+          name: res.data.name,
+          json: res.data.json ? JSON.parse(res.data.json) : undefined,
+        });
+
+      }
+    });
+
+    await doLoadList();
+
+  })();
+</script>
+
 
 
 </body>

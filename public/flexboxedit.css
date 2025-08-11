@@ -75,3 +75,32 @@ body {
     padding-right: 15px;
     border: 1px dashed #666;
 }
+
+
+[data-holder-main] {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+[domeditorarea] {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.explorer {
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.explorer .explorer-item {
+    background-color: #fefefe;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.explorer .explorer-item:hover {
+    background-color: #e0e0ff;
+}
+
+
+
