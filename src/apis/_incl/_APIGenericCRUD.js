@@ -84,7 +84,7 @@ export const _APIGenericCRUD = {
                         ...offsetClause !== undefined ? {offset: Number(offsetClause)} : null,
                         ...limitClause !== undefined ? {limit: Number(limitClause)} : null,
                     });
-                    res.sendResponse({status: 200, data: {count}, });
+                    res.sendResponse({status: 200, data: count, });
                     return;
                 }
 
@@ -106,11 +106,23 @@ export const _APIGenericCRUD = {
         // Read a Item by ID
         appWithMeta.get(`/api/${collectionName}/:id`, {
             parameters: [
-                { name: 'id', in: 'path', required: true, schema: { type: 'string', default: "" } }
+                { name: 'id', in: 'path', required: true, schema: { type: 'string', default: "" } },
+                { in: "query", name: "join", schema: {type: "string", default: ""}, description: "`includeClause` as *JSON string*, <br/>Example: <br/>`{ include: { association: 'Instruments' } }` ", },
             ],
         }, async (req, res) => {
             try {
-                const item = await collectionModel.findByPk(req.params.id);
+                const { join, } = req.query;
+
+                // Build the include clause for joining
+                const includeClause = join ? JSON.parse(join) : undefined;
+
+                if (includeClause) {
+                    recursiveMassageIncludeClause(includeClause);
+                }
+
+                const item = await collectionModel.findByPk(req.params.id, {
+                    ...includeClause ? {include: includeClause} : null,
+                });
                 if (item) {
                     res.sendResponse({status: 200, data: item, });
                 } else {
