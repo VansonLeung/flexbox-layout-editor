@@ -319,6 +319,7 @@ window.FlexboxEdit = (() => {
 
   let cutSelectedBoxes = [];
 
+  let copySelectedBoxes = [];
 
 
 
@@ -382,17 +383,19 @@ window.FlexboxEdit = (() => {
   }
 
 
+  const __fulfillBox = (box) => {
+    __fulfillBoxMethods(box);
+    for (var k in (box.children || [])) {
+      __fulfillBox(box.children[k]);
+      box.children[k].getParent = () => box;
+    }
+  }
+
+
   const doDbgReload = () => {
 
     const newRootBox = domDbg.value ? JSON.parse(domDbg.value) : __createBox({name: 'Root'});
 
-    const fulfillBox = (box) => {
-      __fulfillBoxMethods(box);
-      for (var k in (box.children || [])) {
-        fulfillBox(box.children[k]);
-        box.children[k].getParent = () => box;
-      }
-    }
 
     for (var k in rootBox) {
       delete rootBox[k];
@@ -402,7 +405,7 @@ window.FlexboxEdit = (() => {
       rootBox[k] = newRootBox[k];
     }
 
-    fulfillBox(rootBox);
+    __fulfillBox(rootBox);
 
     domEditorArea.innerHTML = '';
     domEditorAreaHidden.innerHTML = '';
@@ -613,6 +616,10 @@ window.FlexboxEdit = (() => {
     moveItem({cut: true,});
   });
 
+  document.getElementById('moveItemCopy').addEventListener('click', () => {
+    moveItem({copy: true,});
+  });
+
   document.getElementById('moveItemPaste').addEventListener('click', () => {
     moveItem({paste: true,});
   });
@@ -663,6 +670,7 @@ window.FlexboxEdit = (() => {
 
   function moveItem({
     cut,
+    copy,
     paste,
     shiftUp,
     shiftDown,
@@ -677,11 +685,36 @@ window.FlexboxEdit = (() => {
 
     } else if (paste) {
 
-      for (var k in cutSelectedBoxes) {
-        const b = cutSelectedBoxes[k];
-        b.addToParent(selectedBox);
+      if (copySelectedBoxes.length > 0) {
+
+        const __cloneSelectedBoxRecursively = (box) => {
+          const newBox = {
+            ...box,
+          }
+          newBox.children = [
+            ...newBox.children,
+          ]
+          __fulfillBoxMethods(newBox);
+          for (var k in (newBox.children || [])) {
+            newBox.children[k] = __cloneSelectedBoxRecursively(newBox.children[k]);
+            newBox.children[k].getParent = () => newBox;
+          }
+          return newBox;
+        }
+
+        for (var k in copySelectedBoxes) {
+          const b = copySelectedBoxes[k];
+          __cloneSelectedBoxRecursively(b).addToParent(selectedBox);
+        }
       }
-      cutSelectedBoxes = [];
+
+      if (cutSelectedBoxes.length > 0) {
+        for (var k in cutSelectedBoxes) {
+          const b = cutSelectedBoxes[k];
+          b.addToParent(selectedBox);
+        }
+        cutSelectedBoxes = [];
+      }
 
     } else if (cut) {
 
@@ -693,7 +726,14 @@ window.FlexboxEdit = (() => {
       cutSelectedBoxes = [
         selectedBox,
       ];
+      copySelectedBoxes = [];
       removeItem();
+    } else if (copy) {
+
+      copySelectedBoxes = [
+        selectedBox,
+      ];
+      cutSelectedBoxes = [];
     }
     renderBoxes({
       isUpdate: true,
