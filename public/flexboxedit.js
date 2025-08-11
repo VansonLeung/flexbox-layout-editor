@@ -196,9 +196,55 @@
       return null;
     }
 
+    box.getIndexAsChild = () => {
+      if (box.getParent) {
+        const childIndex = box.getParent().children.indexOf(box);
+        return childIndex;
+      }
+
+      return -1;
+    }
+
     box.addToParent = (parent, index) => {
       box.removeFromParent();
       parent.addChild(box, index);
+    }
+
+    box.addBeforeBoxAsSibling = (sibling) => {
+      box.removeFromParent();
+      const siblingIndex = sibling.getIndexAsChild();
+      const siblingParent = sibling.getParent();
+      if (!siblingParent) return;
+      if (siblingIndex < 0) return;
+      box.addToParent(siblingParent, siblingIndex);
+    }
+
+    box.addAfterBoxAsSibling = (sibling) => {
+      box.removeFromParent();
+      const siblingIndex = sibling.getIndexAsChild();
+      const siblingParent = sibling.getParent();
+      if (!siblingParent) return;
+      if (siblingIndex < 0) return;
+      box.addToParent(siblingParent, siblingIndex + 1);
+    }
+
+    box.shiftUp = () => {
+      const boxIndex = box.getIndexAsChild();
+      const boxParent = box.getParent();
+      const targetIndex = boxIndex - 1;
+      if (!boxParent) return;
+      if (targetIndex < 0) return;
+      box.addToParent(boxParent, targetIndex);
+    }
+
+    box.shiftDown = () => {
+      const boxIndex = box.getIndexAsChild();
+      const boxParent = box.getParent();
+      const targetIndex = boxIndex + 1;
+      if (!boxParent) return;
+      if (targetIndex < 0) return;
+      if (boxParent.children.length <= targetIndex) return;
+      box.addToParent(boxParent, targetIndex);
     }
   }
 
@@ -213,6 +259,8 @@
   const rootBox = __createBox({name: 'Root'});
 
   let selectedBox = rootBox;
+
+  let cutSelectedBoxes = [];
 
 
 
@@ -451,16 +499,51 @@
 
 
   document.getElementById('addItem').addEventListener('click', () => {
-    addItem();
+    addItem({});
+  });
+
+  document.getElementById('addItemBeforeSibling').addEventListener('click', () => {
+    addItem({beforeSelectionAsSibling: true,});
+  });
+
+  document.getElementById('addItemAfterSibling').addEventListener('click', () => {
+    addItem({afterSelectionAsSibling: true,});
   });
 
   document.getElementById('removeItem').addEventListener('click', () => {
     removeItem();
   });
 
-  function addItem() {
+  document.getElementById('moveItemCut').addEventListener('click', () => {
+    moveItem({cut: true,});
+  });
+
+  document.getElementById('moveItemPaste').addEventListener('click', () => {
+    moveItem({paste: true,});
+  });
+
+  document.getElementById('moveItemToBefore').addEventListener('click', () => {
+    moveItem({shiftUp: true,});
+  });
+
+  document.getElementById('moveItemToAfter').addEventListener('click', () => {
+    moveItem({shiftDown: true,});
+  });
+
+
+
+  function addItem({
+    beforeSelectionAsSibling,
+    afterSelectionAsSibling,
+  }) {
     const box = __createBox({name: "C"});
-    box.addToParent(selectedBox);
+    if (beforeSelectionAsSibling) {
+      box.addBeforeBoxAsSibling(selectedBox);
+    } else if (afterSelectionAsSibling) {
+      box.addAfterBoxAsSibling(selectedBox);
+    } else {
+      box.addToParent(selectedBox);
+    }
     renderBoxes();
   }
 
@@ -479,6 +562,42 @@
     renderBoxes();
   }
 
+  function moveItem({
+    cut,
+    paste,
+    shiftUp,
+    shiftDown,
+  }) {
+    if (shiftUp) {
+
+      selectedBox.shiftUp();
+
+    } else if (shiftDown) {
+
+      selectedBox.shiftDown();
+
+    } else if (paste) {
+
+      for (var k in cutSelectedBoxes) {
+        const b = cutSelectedBoxes[k];
+        b.addToParent(selectedBox);
+      }
+      cutSelectedBoxes = [];
+
+    } else if (cut) {
+
+      if (selectedBox === rootBox) {
+        alert("Cannot cut root box");
+        return;
+      }
+
+      cutSelectedBoxes = [
+        selectedBox,
+      ];
+      removeItem();
+    }
+    renderBoxes();
+  }
 
 
 
