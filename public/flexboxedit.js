@@ -27,6 +27,7 @@ window.FlexboxEdit = (() => {
     }
 
     const loadItem = (item) => {
+      domInputItemmetaEmbed.value = `<tpl-fbe data-fbe-src-id="${item.id || ''}"></tpl-fbe>`;
       domInputItemmetaId.value = item.id || '';
       domInputItemmetaName.value = item.name || '';
       domDbg.value = item.json ? JSON.stringify(item.json) : '';
@@ -34,6 +35,7 @@ window.FlexboxEdit = (() => {
     }
 
     const createNewItem = () => {
+      domInputItemmetaEmbed.value = ``;
       domInputItemmetaId.value = '';
       domInputItemmetaName.value = '';
       domDbg.value = '';
@@ -83,6 +85,7 @@ window.FlexboxEdit = (() => {
 
     const domInputItemmetaName = document.querySelector('[data-input-itemmeta-name]');
     const domInputItemmetaId = document.querySelector('[data-input-itemmeta-id]');
+    const domInputItemmetaEmbed = document.querySelector('[data-input-itemmeta-embed]');
 
     const domToolbarItemmeta = document.querySelector('[data-toolbar-itemmeta]');
     const domToolbarMenu = document.querySelector('[data-toolbar-menu]');
@@ -760,10 +763,7 @@ ${beautify.html(domEditorAreaHidden.innerHTML, {
     }
 
     
-
-
-
-    return {
+    const instance = {
       setOnUpdateItem,
       setOnUpdateItemMeta,
       loadItem,
@@ -771,7 +771,15 @@ ${beautify.html(domEditorAreaHidden.innerHTML, {
       domOverlayEditor,
       onSummernoteChange,
       createNewItem,
+    };
+
+
+    if (FlexboxEdit.Summernote) {
+      FlexboxEdit.Summernote.initialize(instance);
     }
+
+
+    return instance;
 
   }
 

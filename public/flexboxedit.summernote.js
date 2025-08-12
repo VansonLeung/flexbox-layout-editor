@@ -1,40 +1,42 @@
 window.FlexboxEdit.Summernote = (() => {
 
-  const MEDIA_UPLOAD_API_URL = `http://localhost:3001/api/upload`;
+  const initialize = (flexboxInstance) => {
 
-  const {
-    domOverlayEditor,
-    onSummernoteChange,
-  } = FlexboxEdit;
+    const MEDIA_UPLOAD_API_URL = `http://localhost:13001/api/upload`;
+
+    const {
+      domOverlayEditor,
+      onSummernoteChange,
+    } = flexboxInstance;
 
 
-  const $domOverlayEditor = $(domOverlayEditor);
+    const $domOverlayEditor = $(domOverlayEditor);
 
-  $domOverlayEditor.summernote({
-    placeholder: 'Edit content...',
-    tabsize: 2,
-    height: `500px`,
-    toolbar: [
-      ['style', ['style']],
-      ['style', ['bold', 'italic', 'underline', 'clear']],
-      ['font', ['strikethrough', 'superscript', 'subscript']],
-      ['fontsize', ['fontsize']],
-      ['color', ['color']],
-      ['para', ['ul', 'ol', 'paragraph']],
-      ['height', ['height']],
-      ['table', ['table']],
-      ['insert', ['link', 'picture', 'video']],
-      ['view', ['codeview', 'help']]
-    ],
-    callbacks: {
-      onImageUpload: async function(files) {
-        await sendFile($domOverlayEditor, files[0]);
+    $domOverlayEditor.summernote({
+      placeholder: 'Edit content...',
+      tabsize: 2,
+      height: `500px`,
+      toolbar: [
+        ['style', ['style']],
+        ['style', ['bold', 'italic', 'underline', 'clear']],
+        ['font', ['strikethrough', 'superscript', 'subscript']],
+        ['fontsize', ['fontsize']],
+        ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        ['table', ['table']],
+        ['insert', ['link', 'picture', 'video']],
+        ['view', ['codeview', 'help']]
+      ],
+      callbacks: {
+        onImageUpload: async function(files) {
+          await sendFile($domOverlayEditor, files[0]);
+        },
+        onChange: (contents, $editable) => {
+          onSummernoteChange && onSummernoteChange(contents, $editable);
+        },
       },
-      onChange: (contents, $editable) => {
-        onSummernoteChange && onSummernoteChange(contents, $editable);
-      },
-    },
-  });
+    });
 
 
     async function sendFile($domOverlayEditor, file) {
@@ -58,5 +60,12 @@ window.FlexboxEdit.Summernote = (() => {
       }
     }
 
+
+  }
+
+
+  return {
+    initialize,
+  }
 
 })();

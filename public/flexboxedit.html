@@ -37,6 +37,8 @@
   <input type="text" data-input-itemmeta-name autocapitalize="false" autocorrect="false" autocomplete="false" style="width: 250px;" />
   <label>ID</label>
   <input type="text" data-input-itemmeta-id autocapitalize="false" autocorrect="false" autocomplete="false" readonly style="width: 250px;" />
+  <label>Embed</label>
+  <input type="text" data-input-itemmeta-embed autocapitalize="false" autocorrect="false" autocomplete="false" readonly style="width: 250px;" />
 </div>
 
 <div class="controls" data-toolbar-menu>
@@ -356,7 +358,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
       if (!id) {
         await doLoadList();
 
-        await FlexboxEdit.loadItem({
+        await flexboxInstance.loadItem({
           id: res.data.id,
           name: res.data.name,
           json: JSON.parse(res.data.json),
@@ -364,7 +366,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
       }
 
       if (res.data) {
-        FlexboxEdit.domExplorerItemlist.querySelectorAll(`[data-explorer-item-id="${res.data.id}"]`).forEach((dom) => {
+        flexboxInstance.domExplorerItemlist.querySelectorAll(`[data-explorer-item-id="${res.data.id}"]`).forEach((dom) => {
           dom.item = res.data;
           dom.domName.innerHTML = res.data.name?.trim() || `Untitled`;
         });

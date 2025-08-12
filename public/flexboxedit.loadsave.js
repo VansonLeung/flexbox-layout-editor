@@ -6,7 +6,7 @@ window.FlexboxEdit.LoadSave = (() => {
     query,
     body,
   }) => {
-    const _baseUrl = baseUrl || `http://localhost:3000`;
+    const _baseUrl = baseUrl || `http://localhost:13000`;
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -46,7 +46,7 @@ window.FlexboxEdit.LoadSave = (() => {
   const applyLoad = async (id, {
     baseUrl,
   } = {
-    baseUrl,
+    baseUrl: null,
   }) => {
     return await _apiCall(`/Template/${id}`, {
       baseUrl,
@@ -57,9 +57,10 @@ window.FlexboxEdit.LoadSave = (() => {
   const applyLoadList = async ({
     baseUrl,
   } = {
-    baseUrl,
+    baseUrl: null,
   }) => {
     return await _apiCall(`/Template`, {
+      baseUrl,
       method: "GET",
       query: {
         sort: [
@@ -72,15 +73,17 @@ window.FlexboxEdit.LoadSave = (() => {
   const applySave = async (id, body, {
     baseUrl,
   } = {
-    baseUrl,
+    baseUrl: null,
   }) => {
     if (id) {
       return await _apiCall(`/Template/${id}`, {
+        baseUrl,
         method: "PUT",
         body,
       })
     } else {
       return await _apiCall(`/Template`, {
+        baseUrl,
         method: "POST",
         body,
       })
@@ -90,10 +93,11 @@ window.FlexboxEdit.LoadSave = (() => {
   const applyRemove = async (id, {
     baseUrl,
   } = {
-    baseUrl,
+    baseUrl: null,
   }) => {
     if (id) {
       return await _apiCall(`/Template/${id}`, {
+        baseUrl,
         method: "DELETE",
       })
     }
