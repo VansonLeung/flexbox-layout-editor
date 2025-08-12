@@ -13,6 +13,7 @@ export const initializeAPIs = ({
     // Middleware to parse JSON requests
     app.use(cors());
     app.use(express.static('public'))
+    app.use('/uploads', express.static('uploads'));
     app.use(bodyParser.json({limit: '5000mb'}));
     app.use(bodyParser.urlencoded({limit: '5000mb', extended: true}));
     app.use(_APIGenericUseRequestResponse.apply());
