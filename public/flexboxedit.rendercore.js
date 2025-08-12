@@ -39,7 +39,7 @@ window.FlexboxEdit.RenderCore = (() => {
   ]
 
 
-  function __makeDom(box, isContainIndicators, toggleSelectBox) {
+  function __makeDom(box, isContainIndicators, toggleSelectBox, isProduction) {
     const dom = document.createElement('div');
     dom.innerHTML = `
       <div data-fbe-box>
@@ -50,6 +50,10 @@ window.FlexboxEdit.RenderCore = (() => {
 
     domBox.removeAttribute('data-fbe-box');
     domBox.box = box;
+
+    if (isProduction) {
+      return domBox;
+    }
 
     domBox.setIsHighlighted = (boo) => {
       if (boo) {
@@ -93,11 +97,15 @@ window.FlexboxEdit.RenderCore = (() => {
     _isToggleDisplayTagLabels,
     selectedBox,
     toggleSelectBox,
+    isProduction = false,
   ) => {
-    const isDomBoxExisting = (domBoxMapping.get(box) && domBoxMapping.get(box)[`isContainIndicators=${isContainIndicators}`]);
-    const domBox = isDomBoxExisting ? domBoxMapping.get(box)[`isContainIndicators=${isContainIndicators}`] : __makeDom(box, isContainIndicators, toggleSelectBox);
-    domBoxMapping.set(box, domBoxMapping.get(box) || {});
-    domBoxMapping.get(box)[`isContainIndicators=${isContainIndicators}`] = domBox;
+    const isDomBoxExisting = (!isProduction) && (domBoxMapping.get(box) && domBoxMapping.get(box)[`isContainIndicators=${isContainIndicators}`]);
+    const domBox = isDomBoxExisting ? domBoxMapping.get(box)[`isContainIndicators=${isContainIndicators}`] : __makeDom(box, isContainIndicators, toggleSelectBox, isProduction);
+
+    if (domBoxMapping) {
+      domBoxMapping.set(box, domBoxMapping.get(box) || {});
+      domBoxMapping.get(box)[`isContainIndicators=${isContainIndicators}`] = domBox; 
+    }
 
     if (domBox.box.style) {
       for (var i in styleMap) {
@@ -185,7 +193,7 @@ window.FlexboxEdit.RenderCore = (() => {
     for (var k in box.children) {
       const childBox = box.children[k];
       renderBox(childBox, box, domBox, k, level !== undefined ? level + 1 : undefined, isContainIndicators,
-        domBoxMapping, _isModeEditContent, _isModeEditLayout, _isToggleDisplayTagLabels, selectedBox, toggleSelectBox,
+        domBoxMapping, _isModeEditContent, _isModeEditLayout, _isToggleDisplayTagLabels, selectedBox, toggleSelectBox, isProduction,
       );
     }
 
@@ -196,9 +204,11 @@ window.FlexboxEdit.RenderCore = (() => {
       }
     } else if (domParent) {
       domParent.append(domBox);
-    } else {
-      domBox.parentElement?.append(domBox);
+    } else if (domBox.parentElement) {
+      domBox.parentElement.append(domBox);
     }
+
+    return domBox;
   }
 
 

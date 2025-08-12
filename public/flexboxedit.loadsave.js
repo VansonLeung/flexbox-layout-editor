@@ -1,10 +1,13 @@
 window.FlexboxEdit.LoadSave = (() => {
 
   const _apiCall = async (url, {
+    baseUrl,
     method,
     query,
     body,
   }) => {
+    const _baseUrl = baseUrl || `http://localhost:3000`;
+
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
 
@@ -30,7 +33,7 @@ window.FlexboxEdit.LoadSave = (() => {
     const queryString = queryStrings.join("&");
 
     try {
-      const res = await fetch(`http://localhost:3000/api${url}?${queryString}`, requestOptions)
+      const res = await fetch(`${_baseUrl}/api${url}?${queryString}`, requestOptions)
       const json = await res.json();
       return json;
     } catch (e) {
@@ -40,13 +43,22 @@ window.FlexboxEdit.LoadSave = (() => {
   }
 
 
-  const applyLoad = async (id) => {
+  const applyLoad = async (id, {
+    baseUrl,
+  } = {
+    baseUrl,
+  }) => {
     return await _apiCall(`/Template/${id}`, {
+      baseUrl,
       method: "GET",
     })
   }
 
-  const applyLoadList = async () => {
+  const applyLoadList = async ({
+    baseUrl,
+  } = {
+    baseUrl,
+  }) => {
     return await _apiCall(`/Template`, {
       method: "GET",
       query: {
@@ -57,7 +69,11 @@ window.FlexboxEdit.LoadSave = (() => {
     })
   }
 
-  const applySave = async (id, body) => {
+  const applySave = async (id, body, {
+    baseUrl,
+  } = {
+    baseUrl,
+  }) => {
     if (id) {
       return await _apiCall(`/Template/${id}`, {
         method: "PUT",
@@ -71,7 +87,11 @@ window.FlexboxEdit.LoadSave = (() => {
     }
   }
 
-  const applyRemove = async (id) => {
+  const applyRemove = async (id, {
+    baseUrl,
+  } = {
+    baseUrl,
+  }) => {
     if (id) {
       return await _apiCall(`/Template/${id}`, {
         method: "DELETE",

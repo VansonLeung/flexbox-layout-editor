@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WYSIWYG Flexbox Editor - Client Test</title>
+
+    <script src="./flexboxedit.renderdomcli.js"></script>
+    <script src="./flexboxedit.rendercore.js"></script>
+    <script src="./flexboxedit.loadsave.js"></script>
+
+    <script>
+      (async () => {
+
+        const flexboxInstance = await FlexboxEdit.RenderDomCli.initialize();
+        flexboxInstance.setDefaultOptions({
+          APIUrl: `http://localhost:13000`,
+        })
+
+      })();
+    </script>
+
+
+</head>
+<body>
+
+
+  <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+    <tpl-fbe data-fbe-src-id="7d6f516b-e147-4de1-97a4-d8d83938802a"></tpl-fbe>
+    <tpl-fbe data-fbe-src-id="aa5734ac-dd10-4a10-8ee5-a66cdc2b8699"></tpl-fbe>
+    <tpl-fbe data-fbe-src-id="7d6f516b-e147-4de1-97a4-d8d83938802a"></tpl-fbe>
+    <tpl-fbe data-fbe-src-id="7d6f516b-e147-4de1-97a4-d8d83938802a"></tpl-fbe>
+    <tpl-fbe data-fbe-src-id="7d6f516b-e147-4de1-97a4-d8d83938802a"></tpl-fbe>
+    <tpl-fbe data-fbe-src-id="7d6f516b-e147-4de1-97a4-d8d83938802a"></tpl-fbe>
+    <tpl-fbe data-fbe-src-id="7d6f516b-e147-4de1-97a4-d8d83938802a"></tpl-fbe>
+
+  </div>
+
+
+
+</body>
+</html>
