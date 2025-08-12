@@ -7,6 +7,7 @@
   "scripts": {
     "start": "node --experimental-specifier-resolution=node index.js",
     "dev": "nodemon --exec node  --experimental-specifier-resolution=node index.js",
+    "media": "node media.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,9 +22,11 @@
   "homepage": "https://github.com/VansonLeung/flexbox-layout-editor#readme",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "express": "^5.1.0",
     "express-list-routes": "^1.3.1",
+    "multer": "^2.0.2",
     "mysql2": "^3.14.3",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
