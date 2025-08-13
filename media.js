@@ -7,12 +7,12 @@ import cors from 'cors';
 import { fileURLToPath } from 'url';
 
 const app = express();
-const PORT = process.env.PORT || 13001;
+const PORT = process.env.PORT || 14601;
 
 const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
 const __dirname = path.dirname(__filename); // get the name of the directory
 
-const MEDIA_FILE_BASE_URL = (req) => { return `${req.protocol}://${req.headers.host}/uploads/${req.file.filename}`; };
+const MEDIA_FILE_BASE_URL = (req) => { return `https://m-fbe-cdn.octopus-tech.com/uploads/${req.file.filename}`; };
 
 
 app.use(cors());

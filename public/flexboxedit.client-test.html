@@ -14,7 +14,7 @@
 
         const flexboxInstance = await FlexboxEdit.RenderDomCli.initialize();
         flexboxInstance.setDefaultOptions({
-          APIUrl: `http://localhost:13000`,
+          APIUrl: `https://m-fbe.octopus-tech.com`,
         })
 
       })();
@@ -35,6 +35,22 @@
     <tpl-fbe data-fbe-src-id="7d6f516b-e147-4de1-97a4-d8d83938802a"></tpl-fbe>
 
   </div>
+
+  <script>
+    const fbe = document.querySelector('[data-fbe-src-id="7d6f516b-e147-4de1-97a4-d8d83938802a"]');
+    const button = fbe.blueButton;
+
+    const refs = fbe.domReference || [];
+
+    button.addEventListener('click', (e) => {
+      
+    })
+
+
+
+    domReference[]
+
+  </script>
 
 
 

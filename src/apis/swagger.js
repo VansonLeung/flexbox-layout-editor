@@ -19,7 +19,7 @@ export const initializeSwagger = ({
       },
       servers: [
         {
-          url: "http://localhost:13000",
+          url: "https://m-fbe.octopus-tech.com",
           description: "localhost",
         }
       ],

@@ -2,7 +2,7 @@ window.FlexboxEdit.Summernote = (() => {
 
   const initialize = (flexboxInstance) => {
 
-    const MEDIA_UPLOAD_API_URL = `http://localhost:13001/api/upload`;
+    const MEDIA_UPLOAD_API_URL = `https://m-fbe-cdn.octopus-tech.com/api/upload`;
 
     const {
       domOverlayEditor,
