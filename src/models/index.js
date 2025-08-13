@@ -21,9 +21,10 @@ import {
 
 export const initializeModels = async () => 
 {
-    const sequelize = new Sequelize('flexbox-layout-editor-db', 'postgres', 'postgres', {
-        dialect: 'postgres',
-        host: "127.0.0.1",
+    const sequelize = new Sequelize('mu-flexbox-layout-editor-db', 'root', 'password', {
+        dialect: 'mysql',
+        host: "160.191.154.162",
+        port: 33104,
         dialectOptions: {
           // Your mysql2 options here
         //   socketPath: '/tmp/mysql.sock',
