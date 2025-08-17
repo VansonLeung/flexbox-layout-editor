@@ -63,7 +63,10 @@
     <button style="flex: 1; width: 200px;" id="moveItemToBefore">Shift Up...</button>
     <button style="flex: 1; width: 200px;" id="moveItemToAfter">Shift down...</button>
   </div>
-  <button id="removeItem">Remove Selected Item</button>
+  <div style="display: flex; flex-direction: column;">
+    <button style="flex: 1; height: 0;" id="removeItem">Remove Selected Item</button>
+    <button id="moveItemReplace">Replace Selected Item</button>
+  </div>
   <label>
       Display:
       <select id="display" size="11">
@@ -287,7 +290,7 @@
         <div style="display: flex; flex-direction: column; justify-content: stretch;">
           <div style="display: flex; flex-direction: row; flex: 1; align-items: stretch;">
             <button data-btn-dbg-copy>Copy JSON</button>
-            <button data-btn-dbg-reload>Reload from JSON</button>
+            <button data-btn-dbg-import>Import JSON</button>
           </div>
         </div>
       </div>
@@ -335,15 +338,19 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
 </div>
 
 
-<script src="./flexboxedit.js"></script>
+<script src="./flexboxedit.templateeditorcore.js"></script>
+<script src="./flexboxedit.templateeditorpanel.js"></script>
 <script src="./flexboxedit.rendercore.js"></script>
 <script src="./flexboxedit.summernote.js"></script>
 <script src="./flexboxedit.loadsave.js"></script>
 
 <script>
   (async () => {
-    const flexboxInstance = await FlexboxEdit.initialize();
-    await flexboxInstance.createNewItem();
+    const fbeTemplateEditorCore = await FlexboxEdit.TemplateEditorCore.initialize();
+    const fbeTemplateEditorPanel = await FlexboxEdit.TemplateEditorPanel.initialize({
+      templateEditorCoreInstance: fbeTemplateEditorCore,
+    });
+    await fbeTemplateEditorPanel.createNewItem();
 
     const doSave = async ({
       id,
@@ -358,7 +365,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
       if (!id) {
         await doLoadList();
 
-        await flexboxInstance.loadItem({
+        await fbeTemplateEditorPanel.loadItem({
           id: res.data.id,
           name: res.data.name,
           json: JSON.parse(res.data.json),
@@ -366,7 +373,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
       }
 
       if (res.data) {
-        flexboxInstance.domExplorerItemlist.querySelectorAll(`[data-explorer-item-id="${res.data.id}"]`).forEach((dom) => {
+        fbeTemplateEditorPanel.domExplorerItemlist.querySelectorAll(`[data-explorer-item-id="${res.data.id}"]`).forEach((dom) => {
           dom.item = res.data;
           dom.domName.innerHTML = res.data.name?.trim() || `Untitled`;
         });
@@ -378,7 +385,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
 
       const reslist = await FlexboxEdit.LoadSave.applyLoadList();
 
-      flexboxInstance.domExplorerItemlist.innerHTML = "";
+      fbeTemplateEditorPanel.domExplorerItemlist.innerHTML = "";
 
       for (var k in reslist.data) {
         const item = reslist.data[k];
@@ -402,7 +409,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
         dom.domName = dom.querySelector('[data-explorer-item-name]');
         dom.item = item;
 
-        flexboxInstance.domExplorerItemlist.append(dom);
+        fbeTemplateEditorPanel.domExplorerItemlist.append(dom);
       }
 
     }
@@ -412,7 +419,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
 
       await FlexboxEdit.LoadSave.applyRemove();
 
-      flexboxInstance.domExplorerItemlist.querySelectorAll(`[data-explorer-item-id="${res.data.id}"]`).forEach((dom) => {
+      fbeTemplateEditorPanel.domExplorerItemlist.querySelectorAll(`[data-explorer-item-id="${res.data.id}"]`).forEach((dom) => {
         dom.remove();
       });
 
@@ -420,7 +427,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
 
 
 
-    flexboxInstance.setOnUpdateItem( async ({ isUpdate, id, name, json, }) => {
+    fbeTemplateEditorCore.setOnUpdateItem( async ({ isUpdate, id, name, json, }) => {
       if (isUpdate) {
         await doSave({id, name, json, });
       }
@@ -428,7 +435,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
 
 
 
-    flexboxInstance.setOnUpdateItemMeta( async ({ isUpdate, id, name, json, }) => {
+    fbeTemplateEditorCore.setOnUpdateItemMeta( async ({ isUpdate, id, name, json, }) => {
       if (isUpdate) {
         await doSave({id, name, json, });
       }
@@ -436,7 +443,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
 
 
 
-    flexboxInstance.domExplorerItemlist.addEventListener('click', async (e) => {
+    fbeTemplateEditorPanel.domExplorerItemlist.addEventListener('click', async (e) => {
       e.preventDefault();
 
       const domItemRemove = e.target.closest(`[data-explorer-item-remove]`);
@@ -450,7 +457,7 @@ background: rgba(0,0,0,0.5); padding: 10px; box-sizing: border-box;">
       } else if (domItem) {
 
         const res = await FlexboxEdit.LoadSave.applyLoad(domItem.item.id);
-        await flexboxInstance.loadItem({
+        await fbeTemplateEditorPanel.loadItem({
           id: res.data.id,
           name: res.data.name,
           json: res.data.json ? JSON.parse(res.data.json) : undefined,

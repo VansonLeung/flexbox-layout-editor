@@ -1,3 +1,4 @@
+window.FlexboxEdit = window.FlexboxEdit || {};
 window.FlexboxEdit.RenderCore = (() => {
 
   const rainbowColorsHex = [

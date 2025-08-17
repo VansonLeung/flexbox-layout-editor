@@ -1,3 +1,4 @@
+window.FlexboxEdit = window.FlexboxEdit || {};
 window.FlexboxEdit.LoadSave = (() => {
 
   const _apiCall = async (url, {
