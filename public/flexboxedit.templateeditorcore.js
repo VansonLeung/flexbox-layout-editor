@@ -89,6 +89,9 @@ window.FlexboxEdit.TemplateEditorCore = (() => {
             alignItems: "center",
             justifyContent: "center",
         },
+        attr: {
+          //
+        },
       };
 
       __fulfillBoxMethods(box);
@@ -181,6 +184,7 @@ window.FlexboxEdit.TemplateEditorCore = (() => {
       box.replaceWith = (newBox) => {
         box.children = [...newBox.children];
         box.style = {...newBox.style};
+        box.attr = {...newBox.attr};
         if (newBox.innerHTML !== undefined) { box.innerHTML = newBox.innerHTML; } else { delete box.innerHTML; }
       }
 

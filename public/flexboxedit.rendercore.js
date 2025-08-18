@@ -39,6 +39,12 @@ window.FlexboxEdit.RenderCore = (() => {
     {key: "bottom",},
   ]
 
+  const attrMap = [
+    {key: "id",},
+    {key: "className", alias: "class", },
+    {key: "attr",},
+    {key: "dataset",},
+  ]
 
   function __makeDom(box, isContainIndicators, toggleSelectBox, isProduction) {
     const dom = document.createElement('div');
@@ -116,6 +122,18 @@ window.FlexboxEdit.RenderCore = (() => {
           domBox.style[key] = domBox.box.style[key] || ``;
         } else {
           domBox.style[key] = ``;
+        }
+      }
+    }
+
+    if (domBox.box.attr) {
+      for (var i in attrMap) {
+        const { key } = attrMap[i];
+
+        if (domBox.box.attr[key]) {
+          domBox.setAttribute(key, domBox.box.attr[key] || ``);
+        } else {
+          domBox.removeAttribute(key);
         }
       }
     }
