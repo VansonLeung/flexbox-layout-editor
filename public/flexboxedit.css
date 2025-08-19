@@ -35,10 +35,10 @@ body {
     cursor: pointer;
     box-sizing: border-box;
 }
-.box.is-edit-layout {
+.box.___fbe-box-is-edit-layout {
     border: 2px solid #aaa;
 }
-.box.is-edit-layout.highlighted {
+.box.___fbe-box-is-edit-layout.___fbe-box-highlighted {
     border: 2px solid #000;
     animation: blink 1s infinite;
 }

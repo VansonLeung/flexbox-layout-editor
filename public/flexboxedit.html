@@ -64,17 +64,17 @@
     <button style="flex: 1; width: 200px;" id="moveItemToAfter">Shift down...</button>
   </div>
   <div style="display: flex; flex-direction: column;">
-    <button style="flex: 1; height: 0; width: 100px;" id="removeItem">Remove Selected Item</button>
-    <button style="width: 100px;" id="moveItemReplace">Replace Selected Item</button>
+    <button style="flex: 1; height: 0; width: 70px;" id="removeItem">Remove Selected Item</button>
+    <button style="width: 70px;" id="moveItemReplace">Replace Selected Item</button>
   </div>
 
-  <fieldset>
+  <fieldset style="flex: 1; padding: 0 10px;">
     <legend>
       <button data-btn-edit-tab-layout-flexbox>Layout / Flexbox</button>
       <button data-btn-edit-tab-layout-attr>Core Attributes</button>
     </legend>
 
-    <div class="controls">
+    <div class="controls" style="height: 340px; overflow-y: auto;">
 
       <div class="controls" data-toolbar-edit-layout-flexbox>
 
@@ -301,23 +301,19 @@
           <label>
               id:
           </label>
-          <textarea id="id"></textarea>
+          <input type="text" id="id" style="width: 200px;" />
           <label>
               className:
           </label>
-          <textarea id="className"></textarea>
+          <textarea id="className" style="height: 200px; width: 200px;"></textarea>
         </span>
-        <span style="display: flex; flex-direction: column;">
-          <label>
-              attr:
-          </label>
-          <div id="attr" ></div>
-        </span>
-        <span style="display: flex; flex-direction: column;">
-          <label>
-              dataset:
-          </label>
-          <div id="dataset" ></div>
+        <span class="controls" style="display: flex; flex-direction: column;">
+          <span style="display: flex; flex-direction: column;">
+            <label>
+                dataset:
+            </label>
+            <div id="dataset" ></div>
+          </span>
         </span>
       </div>
 
@@ -327,7 +323,7 @@
   </fieldset>
 
 
-  <div style="display: flex; flex-direction: column; gap: 10px; ">
+  <div style="display: flex; flex-direction: column; gap: 10px; width: 150px;">
     <div style="display: flex; flex-direction: column; ">
       <div style="display: flex; flex-direction: row; ">
         <label>Source JSON</label>

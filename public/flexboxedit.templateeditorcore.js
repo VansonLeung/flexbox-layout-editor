@@ -186,6 +186,7 @@ window.FlexboxEdit.TemplateEditorCore = (() => {
         box.style = {...newBox.style};
         box.attr = {...newBox.attr};
         if (newBox.innerHTML !== undefined) { box.innerHTML = newBox.innerHTML; } else { delete box.innerHTML; }
+
       }
 
       box.shiftUp = () => {
@@ -381,6 +382,10 @@ window.FlexboxEdit.TemplateEditorCore = (() => {
             newBox.children = [
               ...newBox.children,
             ]
+
+            if (newBox.style) { newBox.style = JSON.parse(JSON.stringify(newBox.style)); }
+            if (newBox.attr) { newBox.attr = JSON.parse(JSON.stringify(newBox.attr)); }
+
             __fulfillBoxMethods(newBox);
             for (var k in (newBox.children || [])) {
               newBox.children[k] = __cloneSelectedBoxRecursively(newBox.children[k]);
@@ -452,7 +457,7 @@ window.FlexboxEdit.TemplateEditorCore = (() => {
       } else if (copy) {
 
         copySelectedBoxes = [
-          selectedBox,
+          {...selectedBox},
         ];
         cutSelectedBoxes = [];
       }

@@ -7,14 +7,12 @@ window.FlexboxEdit.TemplateEditorPanelAttr = (() => {
     
     const sel_id = document.querySelector('#id');
     const sel_className = document.querySelector('#className');
-    const sel_attr = document.querySelector('#attr');
     const sel_dataset = document.querySelector('#dataset');
     
     const attrInputMap = [
       {input: sel_id, key: "id",},
       {input: sel_className, key: "className",},
-      {input: sel_attr, key: "attr",},
-      {input: sel_dataset, key: "dataset",},
+      {input: sel_dataset, key: "dataset", defaultValue: [], },
     ]
     
     
@@ -30,10 +28,8 @@ window.FlexboxEdit.TemplateEditorPanelAttr = (() => {
       } = attrInputMap[k];
       
       input.addEventListener("input", (e) => {
-        templateEditorCoreInstance?.updateItemPropertyKeyValue("attr", key, e.target.value);
-      })
-      
-      input.addEventListener("change", (e) => {
+        e.preventDefault();
+        console.log("input...");
         templateEditorCoreInstance?.updateItemPropertyKeyValue("attr", key, e.target.value);
       })
     }
@@ -43,15 +39,22 @@ window.FlexboxEdit.TemplateEditorPanelAttr = (() => {
     
     templateEditorPanelInstance.addOnRefreshSettingsListener(() => {
       const selectedBox = templateEditorCoreInstance?.getItem();
+
+      console.log("ATTR", selectedBox.attr);
       
       for (var k in attrInputMap) {
         const {
           input,
           key,
+          defaultValue = "",
         } = attrInputMap[k];
         
-        input.value = ( (selectedBox?.attr && selectedBox?.attr[key]) !== undefined) ? selectedBox?.attr[key] : "";
+        console.log("inputkeyA", input, key, defaultValue, input.value, selectedBox?.attr[key]);
+        input.value = ( (selectedBox?.attr && selectedBox?.attr[key]) !== undefined) ? selectedBox?.attr[key] : defaultValue;
+        console.log("inputkeyB", input, key, defaultValue, input.value);
       }
+
+      console.log("ATTR2", selectedBox.attr);
     });
     
     
@@ -62,7 +65,16 @@ window.FlexboxEdit.TemplateEditorPanelAttr = (() => {
 
       const initialize = ((dom) => {
 
+        const generateUUID = () => {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        };
+
         dom.data = [];
+
+        let data = null;
 
 
         Object.defineProperty(dom, 'value', {
@@ -71,7 +83,7 @@ window.FlexboxEdit.TemplateEditorPanelAttr = (() => {
           },
 
           set(value) {
-            dom.data = [...value];
+            dom.data = value;
             renderKeyValueList();
           },
         }, {
@@ -95,9 +107,13 @@ window.FlexboxEdit.TemplateEditorPanelAttr = (() => {
         const domBtnAdd = dom.querySelector('[data-btn-add]');
 
 
+        const container = dom;
 
-        const makeTemplateForListItem = (item, index) => {
-          const dom = document.createElement('div');
+
+        const __makeTemplateForListItem = (item, index) => {
+          const dom = container.querySelector(`[data-item-uuid="${item.uuid}"]`) || document.createElement('div');
+
+          dom.setAttribute('data-item-uuid', item.uuid);
 
           dom.innerHTML = `
               <input data-input-key type="text" value="${item.key}"/>
@@ -115,10 +131,12 @@ window.FlexboxEdit.TemplateEditorPanelAttr = (() => {
 
           dom.domInputKey.addEventListener('input', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             editItem(index, 'key', e.target.value);
           });
           dom.domInputValue.addEventListener('input', (e) => {
             e.preventDefault();
+            e.stopPropagation();
             editItem(index, 'value', e.target.value);
           });
           dom.domBtnRemove.addEventListener('click', (e) => {
@@ -137,41 +155,78 @@ window.FlexboxEdit.TemplateEditorPanelAttr = (() => {
           return dom;
         }
 
+        const __removeOrphanedListItem = () => {
+          const domListItems = container.querySelectorAll(`[data-item-uuid]`);
+
+          for (var m in Array.from(domListItems)) {
+            const domListItem = domListItems[m];
+            const domListItemUuid = domListItem.getAttribute('data-item-uuid');
+
+            let shouldDelete = true;
+
+            for (var k in dom.data) {
+              const item = dom.data[k];
+              if (item.uuid === domListItemUuid) {
+                shouldDelete = false;
+                break;
+              }
+            }
+
+            if (shouldDelete) {
+              domListItem.remove();
+            }
+          }
+        }
+
         const renderKeyValueList = () => {
+          console.log("renderKeyValueList!!");
           const container = domKeyValueList;
-          container.innerHTML = ''; // Clear previous content
-          
-          dom.data.forEach((item, index) => {
-            const domItem = makeTemplateForListItem(item, index);
-            container.appendChild(domItem);
-          });
-          
-          console.log(dom.data); // Output the current array to the console
+
+          if (data !== dom.data) {
+            data = dom.data;
+
+            __removeOrphanedListItem();
+
+            dom.data.forEach((item, index) => {
+              const domItem = __makeTemplateForListItem(item, index);
+              container.appendChild(domItem);
+            });
+
+            console.log(dom.data); // Output the current array to the console
+          }
         };
 
         const addItem = () => {
-          dom.data.push({ key: "", value: "" });
-          renderKeyValueList();
-          dom.dispatchEvent(new Event("change"));
+          dom.data = [
+            ...dom.data,
+            { uuid: generateUUID(), key: "", value: "" },
+          ]
+          dom.dispatchEvent(new Event("input"));
         };
 
         const editItem = (index, field, newValue) => {
           (dom.data || [])[index][field] = newValue;
-          dom.dispatchEvent(new Event("change"));
+          dom.dispatchEvent(new Event("input"));
         };
 
         const removeItem = (index) => {
           dom.data.splice(index, 1);
+          dom.data = [
+            ...dom.data,
+          ]
           renderKeyValueList();
-          dom.dispatchEvent(new Event("change"));
+          dom.dispatchEvent(new Event("input"));
         };
 
         const shiftItem = (index, direction) => {
           const newIndex = index + direction;
-          if (newIndex >= 0 && newIndex < data.length) {
-            [data[index], data[newIndex]] = [data[newIndex], data[index]];
+          if (newIndex >= 0 && newIndex < dom.data.length) {
+            [dom.data[index], dom.data[newIndex]] = [dom.data[newIndex], data[index]];
+            dom.data = [
+              ...dom.data,
+            ]
             renderKeyValueList();
-            dom.dispatchEvent(new Event("change"));
+            dom.dispatchEvent(new Event("input"));
           }
         };
 
@@ -201,7 +256,6 @@ window.FlexboxEdit.TemplateEditorPanelAttr = (() => {
 
 
 
-    KeyValueManager.initialize(sel_attr);
     KeyValueManager.initialize(sel_dataset);
     
     

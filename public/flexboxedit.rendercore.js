@@ -49,13 +49,12 @@ window.FlexboxEdit.RenderCore = (() => {
   function __makeDom(box, isContainIndicators, toggleSelectBox, isProduction) {
     const dom = document.createElement('div');
     dom.innerHTML = `
-      <div data-fbe-box>
+      <div>
       </div>
     `;
 
-    const domBox = dom.querySelector('[data-fbe-box]');
+    const domBox = dom.children[0];
 
-    domBox.removeAttribute('data-fbe-box');
     domBox.box = box;
 
     if (isProduction) {
@@ -64,9 +63,9 @@ window.FlexboxEdit.RenderCore = (() => {
 
     domBox.setIsHighlighted = (boo) => {
       if (boo) {
-        domBox.classList.add('highlighted');
+        domBox.classList.add('___fbe-box-highlighted');
       } else {
-        domBox.classList.remove('highlighted');
+        domBox.classList.remove('___fbe-box-highlighted');
       }
     }
 
@@ -126,14 +125,23 @@ window.FlexboxEdit.RenderCore = (() => {
       }
     }
 
-    if (domBox.box.attr) {
-      for (var i in attrMap) {
-        const { key } = attrMap[i];
+    for (var k in domBox.dataset) {
+      delete domBox.dataset[k];
+    }
 
-        if (domBox.box.attr[key]) {
-          domBox.setAttribute(key, domBox.box.attr[key] || ``);
-        } else {
-          domBox.removeAttribute(key);
+    if (domBox.box.attr) {
+      if (domBox.box.attr['id']) {
+        domBox.setAttribute('id', domBox.box.attr['id'] || ``);
+      } else {
+        domBox.removeAttribute('id');
+      }
+
+      domBox.className = domBox.box.attr['className'] || ``;
+
+      for (var k in domBox.box.attr['dataset'] || []) {
+        const data = domBox.box.attr['dataset'][k];
+        if (data.key) {
+          domBox.dataset[data.key] = data.value;
         }
       }
     }
@@ -157,9 +165,9 @@ window.FlexboxEdit.RenderCore = (() => {
       domBox.classList.add('box');
 
       if (_isModeEditLayout) {
-        domBox.classList.add('is-edit-layout');
+        domBox.classList.add('___fbe-box-is-edit-layout');
       } else {
-        domBox.classList.remove('is-edit-layout');
+        domBox.classList.remove('___fbe-box-is-edit-layout');
       }
 
       if (_isModeEditLayout) {
@@ -189,7 +197,7 @@ window.FlexboxEdit.RenderCore = (() => {
         domBox.domContentLabel.style.display = `none`;
       } else {
         if (level !== undefined) {
-          domBox.domContentLabel.innerHTML = `<span style="position: initial; left: 5px; top: 5px;">data-fbe-box-${box.name}-${level}-${index}</span>`;
+          domBox.domContentLabel.innerHTML = `<span style="position: initial; left: 5px; top: 5px;">${box.name}-${level}-${index}</span>`;
         }
         domBox.domContentLabel.style.display = ``;
       }

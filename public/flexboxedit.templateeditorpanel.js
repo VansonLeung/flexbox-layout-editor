@@ -100,10 +100,10 @@ window.FlexboxEdit.TemplateEditorPanel = (() => {
 
     domHolderExplorer.append(domExplorerItemlist);
 
+    domHolderMain.append(domToolbarMenu);
     domHolderMain.append(domEditorArea);
     domHolderMain.append(domEditorAreaHidden);
     domHolderMain.append(domToolbarItemmeta);
-    domHolderMain.append(domToolbarMenu);
     domHolderMain.append(domToolbarEditLayout);
 
 
