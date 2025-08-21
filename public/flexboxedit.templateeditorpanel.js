@@ -107,7 +107,7 @@ window.FlexboxEdit.TemplateEditorPanel = (() => {
     domHolderMain.append(domToolbarEditLayout);
 
 
-    const onSummernoteChange = (contents, $editable) => {
+    const onHtmlEditorContentChange = (contents, $editable) => {
       templateEditorCoreInstance?.setItemInnerHTML(contents);
     }
 
@@ -281,7 +281,7 @@ ${beautify.html(domEditorAreaHidden.innerHTML, {
 
     domBtnEdititeminnerhtml.addEventListener('click', (e) => {
       domOverlayEditorHolder.style.display = `flex`;
-      $(domOverlayEditor).summernote('code', templateEditorCoreInstance?.getItemInnerHTML() || ``);
+      domOverlayEditor.startHtmlEditor(templateEditorCoreInstance?.getItemInnerHTML() || ``);
     })
 
     domBtnOverlayEditorClose.addEventListener('click', (e) => {
@@ -353,14 +353,14 @@ ${beautify.html(domEditorAreaHidden.innerHTML, {
       createNewItem,
       domExplorerItemlist,
       domOverlayEditor,
-      onSummernoteChange,
+      onHtmlEditorContentChange,
       addOnRefreshSettingsListener,
       removeOnRefreshSettingsListener,
     };
 
 
-    if (FlexboxEdit.Summernote) {
-      FlexboxEdit.Summernote.initialize(instance);
+    if (FlexboxEdit.HtmlEditor && FlexboxEdit.HtmlEditor.Summernote) {
+      FlexboxEdit.HtmlEditor.Summernote.initialize(instance);
     }
 
 

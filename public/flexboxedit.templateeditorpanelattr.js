@@ -40,21 +40,15 @@ window.FlexboxEdit.TemplateEditorPanelAttr = (() => {
     templateEditorPanelInstance.addOnRefreshSettingsListener(() => {
       const selectedBox = templateEditorCoreInstance?.getItem();
 
-      console.log("ATTR", selectedBox.attr);
-      
       for (var k in attrInputMap) {
         const {
           input,
           key,
           defaultValue = "",
         } = attrInputMap[k];
-        
-        console.log("inputkeyA", input, key, defaultValue, input.value, selectedBox?.attr[key]);
-        input.value = ( (selectedBox?.attr && selectedBox?.attr[key]) !== undefined) ? selectedBox?.attr[key] : defaultValue;
-        console.log("inputkeyB", input, key, defaultValue, input.value);
-      }
 
-      console.log("ATTR2", selectedBox.attr);
+        input.value = ( (selectedBox && selectedBox.attr && selectedBox.attr[key]) !== undefined) ? selectedBox.attr[key] : defaultValue;
+      }
     });
     
     

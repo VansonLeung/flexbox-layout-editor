@@ -1,5 +1,6 @@
 window.FlexboxEdit = window.FlexboxEdit || {};
-window.FlexboxEdit.Summernote = (() => {
+window.FlexboxEdit.HtmlEditor = window.FlexboxEdit.HtmlEditor || {};
+window.FlexboxEdit.HtmlEditor.Summernote = (() => {
 
   const initialize = (flexboxInstance) => {
 
@@ -7,11 +8,15 @@ window.FlexboxEdit.Summernote = (() => {
 
     const {
       domOverlayEditor,
-      onSummernoteChange,
+      onHtmlEditorContentChange,
     } = flexboxInstance;
 
 
     const $domOverlayEditor = $(domOverlayEditor);
+
+    domOverlayEditor.startHtmlEditor = (html) => {
+      $(domOverlayEditor).summernote('code', html || ``);
+    }
 
     $domOverlayEditor.summernote({
       placeholder: 'Edit content...',
@@ -30,11 +35,16 @@ window.FlexboxEdit.Summernote = (() => {
         ['view', ['codeview', 'help']]
       ],
       callbacks: {
+        onInit: function() {
+            $.summernote.options.editor = {
+                allowedTags: ['*'] // Allow all tags (not recommended for security)
+            };
+        },
         onImageUpload: async function(files) {
           await sendFile($domOverlayEditor, files[0]);
         },
         onChange: (contents, $editable) => {
-          onSummernoteChange && onSummernoteChange(contents, $editable);
+          onHtmlEditorContentChange && onHtmlEditorContentChange(contents, $editable);
         },
       },
     });
